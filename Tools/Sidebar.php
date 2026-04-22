@@ -1,4 +1,7 @@
- 
+ <?php 
+ $PageActive = $_SESSION['PageActive'];
+
+?>
  
  
  <!-- Spinner Start -->
@@ -11,7 +14,7 @@
  
   <div class="sidebar pe-4 pb-3">
             <nav class="navbar bg-light navbar-light">
-                <a href="Home" class="navbar-brand mx-4 mb-3">
+                <a href="Home" class="navbar-brand mx-4 mb-3 d-none d-lg-block">
                     <img src="img/BDE-Logo.png" alt="Logo" style="width: 200px; height: 80px;">
                 </a>
                 <div class="d-flex align-items-center ms-4 mb-4">
@@ -25,25 +28,43 @@
                     </div>
                 </div>
                 <div class="navbar-nav w-100">
-                    <a href="Home" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+                    <a href="Home" class="nav-item nav-link" <?php echo ($PageActive == 'Home') ? 'active' : ''; ?>><i class="fa fa-tachometer-alt me-2"></i>Dashboard <?php echo $PageActive ; ?></a>
                     <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>การปฏิบัติงาน</a>
-                        <div class="dropdown-menu bg-transparent border-0">
-                            <a href="Attendance" class="dropdown-item">บันทึกเวลา</a>
-                            <a href="typography.html" class="dropdown-item">ปฏิบัติงานทั้งหมด</a>
+                        <a href="#" class="nav-link dropdown-toggle <?php echo ($PageActive == 'Attendance') ? 'show active' : ''; ?>  " data-bs-toggle="dropdown"><i class="fa fa-calendar me-2"></i>การปฏิบัติงาน</a>
+                        <div class="dropdown-menu bg-transparent border-0 show">
+                            <a href="Attendance" class="dropdown-item" <?php echo ($PageActive == 'Attendance') ? 'active' : ''; ?>>บันทึกเวลา</a>
+                            <a href="blank.html" class="dropdown-item">ปฏิบัติงานทั้งหมด</a>
+                            <a href="blank.html" class="dropdown-item">รายงาน</a>
                         </div>
                     </div>
-                    <a href="widget.html" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Widgets</a>
-                    <a href="form.html" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Forms</a>
-                    <a href="table.html" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Tables</a>
-                    <a href="chart.html" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Charts</a>
                     <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="far fa-file-alt me-2"></i>Pages</a>
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-users me-2"></i>การให้บริการ</a>
                         <div class="dropdown-menu bg-transparent border-0">
-                            <a href="signin.html" class="dropdown-item">Sign In</a>
-                            <a href="signup.html" class="dropdown-item">Sign Up</a>
-                            <a href="404.html" class="dropdown-item">404 Error</a>
-                            <a href="blank.html" class="dropdown-item">Blank Page</a>
+                            <a href="Attendance" class="dropdown-item">ผู้เข้าใช้บริการเดือนนี้</a>
+                            <a href="blank.html" class="dropdown-item">ผู้เข้าใช้บริการทั้งหมด</a>
+                            <a href="blank.html" class="dropdown-item">รายงาน</a>
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-graduation-cap me-2"></i>ข้อมูลกิจกรรม</a>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="Attendance" class="dropdown-item">กิจกรรมเดือนนี้</a>
+                            <a href="blank.html" class="dropdown-item">กิจกรรมทั้งหมด</a>
+                            <a href="blank.html" class="dropdown-item">รายงาน</a>
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-cogs me-2"></i>การแจ้งซ่อม</a>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="Attendance" class="dropdown-item">แจ้งซ่อมเดือนนี้</a>
+                            <a href="blank.html" class="dropdown-item">แจ้งซ่อมทั้งหมด</a>
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="far fa-file-alt me-2"></i>Upload รายงาน</a>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="Attendance" class="dropdown-item">Upload รายงานเดือนนี้</a>
+                            <a href="blank.html" class="dropdown-item">Upload รายงานทั้งหมด</a>
                         </div>
                     </div>
                 </div>

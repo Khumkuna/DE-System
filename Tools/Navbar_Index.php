@@ -1,7 +1,7 @@
 <!-- Navbar Start -->
             <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
-                <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
-                    <h2 class="text-primary mb-0"><i class="fa fa-hashtag"></i></h2>
+                <a href="index" class="navbar-brand d-flex d-lg-none me-4">
+                    <h2 class="text-primary mb-0"><img src="img/BDE-Logo.png" alt="Logo" style="width: 100%; height: auto;"></h2>
                 </a>
                 <a href="#" class="sidebar-toggler flex-shrink-0">
                     <i class="fa fa-bars"></i>
@@ -21,7 +21,7 @@
                             <h5 class="modal-title text-white" id="loginModalLabel">เข้าสู่ระบบ</h5>
                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <form method="POST" action="Processing.php">
+                        <form method="POST" action="Processing">
                         <div class="modal-body">
 
                                 <div class="mb-3">

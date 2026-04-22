@@ -28,7 +28,7 @@ if(isset($_POST['login'])) {
                             });
                           });
                           </script>";
-                          header("refresh:2; url=Home");
+                          header("refresh:2; url=Session");
 
     } else {
         echo "
@@ -45,6 +45,8 @@ if(isset($_POST['login'])) {
                             });
                           });
                           </script>";
+                              session_destroy();
+                              header("refresh:2; url=index");
     }
 }
 

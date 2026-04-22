@@ -1,3 +1,7 @@
+<?php
+$_SESSION['PageActive'] = 'Attendance';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -44,9 +48,26 @@
 
                         </div>
                      </div>   
-
-                      
                 </div>
+                <br>
+
+                <div class="row g-4">
+                    <div class="col-sm-12 col-xl-12" align="center">
+                        <div class="bg-light rounded d-flex align-items-center justify-content-center p-4" style="color: #1ff308;" >
+                        <span class="mb-0" >
+                        <h4 class="mb-0" style="color: #123a0d;" >การเข้างานวันนี้</h4>
+                        <h6 class="mb-0" style="color: #123a0d;" ><b>เวลาที่เข้างาน:</b> 08:00 น.  &nbsp;&nbsp;&nbsp;&nbsp; <b>เวลาที่ออกงาน:</b> 17:00 น.</h6>
+                        <h6 class="mb-0" style="color: #123a0d;" ><b>หมายเหตุ: จัดอบรมให้ความรู้</b></h6>
+                        
+
+                        </div>
+                     </div>   
+                </div>
+
+
+
+
+
             </div>
             <!-- Button End -->
 

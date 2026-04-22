@@ -1,8 +1,5 @@
 <?php 
-include 'Connect.php'; 
-// include 'Session.php';
-
-
+$_SESSION['PageActive'] = 'Home';
 ?>
 
 <!DOCTYPE html>

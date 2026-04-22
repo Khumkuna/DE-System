@@ -15,6 +15,10 @@ mysqli_set_charset($conn, "SET character_set_results=utf-8");
 if ($conn->connect_error) {
 	die("Connection failed: " . $conn->connect_error);
 }
+
+include 'Disabled_Warning.php';
+
+
 session_start();
 header('Cache-Control: no cache'); //no cache
 session_cache_limiter('private_no_expire'); // works
