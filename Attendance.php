@@ -1,5 +1,5 @@
 <?php
-$_SESSION['PageActive'] = 'Attendance';
+$PageActive = 'Attendance';
 ?>
 
 <!DOCTYPE html>
@@ -70,16 +70,11 @@ $_SESSION['PageActive'] = 'Attendance';
 
             </div>
             <!-- Button End -->
-
-                <?php #include 'Tools/Footer.php'; ?>
-
-        </div>
-        <!-- Content End -->
-
-       
+  
 
         <!-- Back to Top -->
-        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+        <!-- <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a> -->
+
     </div>
 
     <!-- JavaScript Libraries -->
@@ -132,6 +127,8 @@ $_SESSION['PageActive'] = 'Attendance';
             console.log('Photo captured');
         });
     </script>
+
+         
 </body>
 
 </html>

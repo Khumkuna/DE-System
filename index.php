@@ -1,13 +1,8 @@
-<?php 
-
-
-
-?>
 
 <!DOCTYPE html>
 <html lang="en">
 
-<?php include 'Tools/Header.php'; ?>
+<?php include 'Tools/Header_index.php'; ?>
 
 <body>
     <div class="container-fluid position-relative bg-white d-flex p-0">

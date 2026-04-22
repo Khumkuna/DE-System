@@ -1,26 +1,5 @@
 <?php 
 include 'connect.php'; 
-$Login_Name = $_SESSION['Login_Name'];
-
-if ($Login_Name == '') {
-        echo "
-        
-                <script src='https://code.jquery.com/jquery-3.6.4.js'></script>
-                <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
-                <script>
-                    $(document).ready(function(){
-                        Swal.fire({
-                        title:'Session หมดอายุ โปรด Login เข้าระบบใหม่อีกครั้ง',
-                        icon: 'error',
-                        timer: 2000,
-                        showConfirmButton: false
-                        });
-                    });
-                    </script>";
-        header("Location: Session");
-        exit();
-    }
-
 
 ?>
 <head>

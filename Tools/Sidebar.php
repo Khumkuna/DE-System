@@ -1,9 +1,3 @@
- <?php 
- $PageActive = $_SESSION['PageActive'];
-
-?>
- 
- 
  <!-- Spinner Start -->
         <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
             <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
@@ -24,25 +18,25 @@
                     </div>
                     <div class="ms-3">
                         <h6 class="mb-0">Jhon Doe</h6>
-                        <span>Admin</span>
+                        <span><?php echo $PageActive; ?></span>
                     </div>
                 </div>
                 <div class="navbar-nav w-100">
-                    <a href="Home" class="nav-item nav-link" <?php echo ($PageActive == 'Home') ? 'active' : ''; ?>><i class="fa fa-tachometer-alt me-2"></i>Dashboard <?php echo $PageActive ; ?></a>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle <?php echo ($PageActive == 'Attendance') ? 'show active' : ''; ?>  " data-bs-toggle="dropdown"><i class="fa fa-calendar me-2"></i>การปฏิบัติงาน</a>
-                        <div class="dropdown-menu bg-transparent border-0 show">
-                            <a href="Attendance" class="dropdown-item" <?php echo ($PageActive == 'Attendance') ? 'active' : ''; ?>>บันทึกเวลา</a>
-                            <a href="blank.html" class="dropdown-item">ปฏิบัติงานทั้งหมด</a>
-                            <a href="blank.html" class="dropdown-item">รายงาน</a>
+                    <a href="Home" class="nav-item nav-link <?php if($PageActive == 'Home') echo 'active'; ?>"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+                    <div class="nav-item dropdown" >
+                        <a  class="nav-link dropdown-toggle <?php if($PageActive == 'Attendance' || $PageActive == 'AttendanceAll' || $PageActive == 'AttendanceReport') echo 'active'; ?>" data-bs-toggle="dropdown" ><i class="fa fa-calendar me-2"></i>การปฏิบัติงาน</a>
+                        <div class="dropdown-menu bg-transparent border-0 <?php if($PageActive == 'Attendance' || $PageActive == 'AttendanceAll' || $PageActive == 'AttendanceReport') echo 'show'; ?>" >
+                            <a href="Attendance" class="dropdown-item <?php if($PageActive == 'Attendance') echo 'active'; ?>" >บันทึกเวลา</a>
+                            <a href="Attendance_All" class="dropdown-item <?php if($PageActive == 'AttendanceAll') echo 'active'; ?>">ปฏิบัติงานทั้งหมด</a>
+                            <!-- <a href="blank.html" class="dropdown-item <?php if($PageActive == 'AttendanceReport') echo 'active'; ?>">รายงาน</a> -->
                         </div>
                     </div>
                     <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-users me-2"></i>การให้บริการ</a>
-                        <div class="dropdown-menu bg-transparent border-0">
-                            <a href="Attendance" class="dropdown-item">ผู้เข้าใช้บริการเดือนนี้</a>
-                            <a href="blank.html" class="dropdown-item">ผู้เข้าใช้บริการทั้งหมด</a>
-                            <a href="blank.html" class="dropdown-item">รายงาน</a>
+                        <a href="#" class="nav-link dropdown-toggle <?php if($PageActive == 'Service' || $PageActive == 'ServiceAll' || $PageActive == 'ServiceReport') echo 'active'; ?>" data-bs-toggle="dropdown"><i class="fa fa-users me-2"></i>การให้บริการ</a>
+                        <div class="dropdown-menu bg-transparent border-0 <?php if($PageActive == 'Service' || $PageActive == 'ServiceAll' || $PageActive == 'ServiceReport') echo 'show'; ?>">
+                            <a href="Service" class="dropdown-item <?php if($PageActive == 'Service') echo 'active'; ?>">ผู้เข้าใช้บริการเดือนนี้</a>
+                            <a href="Service_All" class="dropdown-item <?php if($PageActive == 'ServiceAll') echo 'active'; ?>">ผู้เข้าใช้บริการทั้งหมด</a>
+                            <a href="Service_Report" class="dropdown-item <?php if($PageActive == 'ServiceReport') echo 'active'; ?>">รายงาน</a>
                         </div>
                     </div>
                     <div class="nav-item dropdown">
