@@ -1,5 +1,5 @@
 <?php
-$PageActive = 'Service';
+$PageActive = 'ServiceAll';
 ?>
 
 <!DOCTYPE html>
@@ -40,6 +40,35 @@ $PageActive = 'Service';
                             <span class="mb-0" >
 
 
+                                <div class="d-flex align-items-center gap-2 mb-3">
+                                    <select class="form-select form-select-sm" style="width: 200px;">
+                                        <option selected disabled>เลือกเดือน</option>
+                                        <option value="1">มกราคม</option>
+                                        <option value="2">กุมภาพันธ์</option>
+                                        <option value="3">มีนาคม</option>
+                                        <option value="4">เมษายน</option>
+                                        <option value="5">พฤษภาคม</option>
+                                        <option value="6">มิถุนายน</option>
+                                        <option value="7">กรกฎาคม</option>
+                                        <option value="8">สิงหาคม</option>
+                                        <option value="9">กันยายน</option>
+                                        <option value="10">ตุลาคม</option>
+                                        <option value="11">พฤศจิกายน</option>
+                                        <option value="12">ธันวาคม</option>
+                                    </select>
+                                    
+                                    <select class="form-select form-select-sm" style="width: 200px;">
+                                        <option selected disabled>เลือกปี</option>
+                                        <option value="2569">2569</option>
+                                        <option value="2570">2570</option>
+                                        <option value="2571">2571</option>
+                                    </select>
+                                    
+                                    <button class="btn btn-primary btn-sm">แสดงข้อมูล</button>
+                                    <button class="btn btn-success btn-sm ms-auto">พิมพ์รายงาน</button>
+                                </div>
+
+
                                 <h5 style="color: #123a0d;">ข้อมูลการให้บริการของศูนย์ MS-Siam Tower ในเดือนกุมภาพันธ์ 2569</h5>
 
                                 <table class="table table-bordered" width="100%" style="color: #123a0d;" >
@@ -52,7 +81,6 @@ $PageActive = 'Service';
                                                 <th>เวลาเข้าใช้บริการ</th>
                                                 <th>เวลาออกเลิกใช้บริการ</th>
                                                 <th>ระยะเวลาการใช้บริการ</th>
-                                                <th>เครื่องมือ</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -77,7 +105,6 @@ $PageActive = 'Service';
                                                     <td>$startTime</td>
                                                     <td>$endTime</td>
                                                     <td>$duration</td>
-                                                    <td><button class='btn btn-primary btn-sm'>เครื่องมือ</button></td>
                                                 </tr>";
                                                 $startDate->modify('+1 day');
                                             }

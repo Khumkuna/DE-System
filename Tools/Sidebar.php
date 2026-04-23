@@ -40,25 +40,25 @@
                         </div>
                     </div>
                     <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-graduation-cap me-2"></i>ข้อมูลกิจกรรม</a>
-                        <div class="dropdown-menu bg-transparent border-0">
-                            <a href="Attendance" class="dropdown-item">กิจกรรมเดือนนี้</a>
-                            <a href="blank.html" class="dropdown-item">กิจกรรมทั้งหมด</a>
-                            <a href="blank.html" class="dropdown-item">รายงาน</a>
+                        <a href="#" class="nav-link dropdown-toggle <?php if($PageActive == 'Activity' || $PageActive == 'ActivityAll' || $PageActive == 'ActivityReport') echo 'active'; ?>" data-bs-toggle="dropdown"><i class="fa fa-graduation-cap me-2"></i>ข้อมูลกิจกรรม</a>
+                        <div class="dropdown-menu bg-transparent border-0 <?php if($PageActive == 'Activity' || $PageActive == 'ActivityAll' || $PageActive == 'ActivityReport') echo 'show'; ?>">
+                            <a href="Activity" class="dropdown-item <?php if($PageActive == 'Activity') echo 'active'; ?>">กิจกรรมเดือนนี้</a>
+                            <a href="Activity_All" class="dropdown-item <?php if($PageActive == 'ActivityAll') echo 'active'; ?>">กิจกรรมทั้งหมด</a>
+                            <a href="Activity_Report" class="dropdown-item <?php if($PageActive == 'ActivityReport') echo 'active'; ?>">รายงาน</a>
                         </div>
                     </div>
                     <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-cogs me-2"></i>การแจ้งซ่อม</a>
-                        <div class="dropdown-menu bg-transparent border-0">
-                            <a href="Attendance" class="dropdown-item">แจ้งซ่อมเดือนนี้</a>
-                            <a href="blank.html" class="dropdown-item">แจ้งซ่อมทั้งหมด</a>
+                        <a href="#" class="nav-link dropdown-toggle <?php if($PageActive == 'Repair' || $PageActive == 'RepairAll') echo 'active'; ?>" data-bs-toggle="dropdown"><i class="fa fa-cogs me-2"></i>การแจ้งซ่อม</a>
+                        <div class="dropdown-menu bg-transparent border-0 <?php if($PageActive == 'Repair' || $PageActive == 'RepairAll') echo 'show'; ?>">
+                            <a href="Repair" class="dropdown-item <?php if($PageActive == 'Repair') echo 'active'; ?>">แจ้งซ่อมเดือนนี้</a>
+                            <a href="Repair_All" class="dropdown-item <?php if($PageActive == 'RepairAll') echo 'active'; ?>">แจ้งซ่อมทั้งหมด</a>
                         </div>
                     </div>
                     <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="far fa-file-alt me-2"></i>Upload รายงาน</a>
-                        <div class="dropdown-menu bg-transparent border-0">
-                            <a href="Attendance" class="dropdown-item">Upload รายงานเดือนนี้</a>
-                            <a href="blank.html" class="dropdown-item">Upload รายงานทั้งหมด</a>
+                        <a href="#" class="nav-link dropdown-toggle <?php if($PageActive == 'Upload' || $PageActive == 'UploadAll') echo 'active'; ?>" data-bs-toggle="dropdown"><i class="far fa-file-alt me-2"></i>Upload รายงาน</a>
+                        <div class="dropdown-menu bg-transparent border-0 <?php if($PageActive == 'Upload' || $PageActive == 'UploadAll') echo 'show'; ?>">
+                            <a href="Attendance" class="dropdown-item <?php if($PageActive == 'Upload') echo 'active'; ?>">Upload รายงานเดือนนี้</a>
+                            <a href="blank.html" class="dropdown-item <?php if($PageActive == 'UploadAll') echo 'active'; ?>">Upload รายงานทั้งหมด</a>
                         </div>
                     </div>
                 </div>
