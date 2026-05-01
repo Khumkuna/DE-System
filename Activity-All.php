@@ -1,5 +1,5 @@
 <?php
-$PageActive = 'Activity';
+$PageActive = 'ActivityAll';
 ?>
 
 <!DOCTYPE html>
@@ -37,58 +37,45 @@ $PageActive = 'Activity';
                 <div class="row g-4">
                     <div class="col-sm-12 col-xl-12" align="center">
                         <div class="bg-light rounded  justify-content-center p-4" style="color: #1ff308;" >
+
+                        <div class="mb-3 d-flex gap-2 align-items-center justify-content-center">
+                            <label for="monthFilter" class="form-label mb-0" style="color: #123a0d;">เลือกเดือน:</label>
+                            <input type="month" class="form-control" id="monthFilter" style="width: 200px;">
+                            <button class="btn btn-primary" style="background-color: #123a0d; border-color: #123a0d;" onclick="filterByMonth()">ค้นหา</button>
+                            <button class="btn btn-secondary" onclick="resetFilter()">รีเซ็ต</button>
+                        </div>
+
+                        <script>
+                        function filterByMonth() {
+                            const monthInput = document.getElementById('monthFilter').value;
+                            if (!monthInput) {
+                                alert('กรุณาเลือกเดือน');
+                                return;
+                            }
+                            
+                            const cards = document.querySelectorAll('.activity-card');
+                            cards.forEach(card => {
+                                const dateText = card.querySelector('[style*="position: absolute"]')?.parentElement.textContent || '';
+                                if (dateText.includes(monthInput.split('-')[1])) {
+                                    card.style.display = 'flex';
+                                } else {
+                                    card.style.display = 'none';
+                                }
+                            });
+                        }
+
+                        function resetFilter() {
+                            document.getElementById('monthFilter').value = '';
+                            const cards = document.querySelectorAll('.activity-card');
+                            cards.forEach(card => {
+                                card.style.display = 'flex';
+                            });
+                        }
+                        </script>
+
                             <span class="mb-0" >
-                                <h2 style="color: #123a0d;">เดือน กุมภาพันธ์ 2569</h2>
-                            </span>
+                                <H6>ค้นหาเดือน: </H6>
 
-
-
-                            <div class="d-flex justify-content-end mb-3">
-                                        <button type="button" class="btn btn-lg btn-primary btn-lg-square" data-bs-toggle="modal" data-bs-target="#addActivityModal">
-                                    <i class="fa fa-plus"></i>
-                                </button>
-                            </div>
-
-                            <!-- Modal -->
-                            <div class="modal fade" id="addActivityModal" tabindex="-1" aria-labelledby="addActivityLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content" style="background-color: #f8f9fa; border: 1px solid #dee2e6;">
-                                        <div class="modal-header" style="background-color: #123a0d; border-bottom: none;">
-                                            <h5 class="modal-title" id="addActivityLabel" style="color: #fff;">เพิ่มข้อมูลกิจกรรม</h5>
-                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form>
-                                                <div class="mb-3">
-                                                    <label for="activityDate" class="form-label" style="color: #123a0d;">วันที่</label>
-                                                    <input type="date" class="form-control" id="activityDate">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="activityName" class="form-label" style="color: #123a0d;">ชื่อผู้ใช้บริการ</label>
-                                                    <input type="text" class="form-control" id="activityName">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="activityGender" class="form-label" style="color: #123a0d;">เพศ</label>
-                                                    <select class="form-control" id="activityGender">
-                                                        <option>เลือก</option>
-                                                        <option>ชาย</option>
-                                                        <option>หญิง</option>
-                                                    </select>
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <div class="modal-footer" style="border-top: 1px solid #dee2e6;">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
-                                            <button type="button" class="btn btn-primary" style="background-color: #123a0d; border-color: #123a0d;">บันทึก</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                              
-
-                               
                             <div class="row g-4 mt-4">
                                 <div class="col-12">
                                     <div class="overflow-auto" style="scroll-behavior: smooth;" id="activityScroll">
@@ -134,11 +121,6 @@ $PageActive = 'Activity';
                                     </div>
                                 </div>
                             </div>
-
-
-
-
-       
 
                             <script>
                             const carousel = document.getElementById('activityCarousel');
@@ -198,15 +180,14 @@ $PageActive = 'Activity';
                 <br>
             </div>
             
-                             <?php
+            <?php
             include 'Tools/Footer.php'; 
             ?>
+       
 
         <!-- Back to Top -->
         <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>
-               
-
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -258,11 +239,6 @@ $PageActive = 'Activity';
             console.log('Photo captured');
         });
     </script>
-
-    
-
-
-
 </body>
 
 </html>
