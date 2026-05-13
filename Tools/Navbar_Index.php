@@ -33,10 +33,8 @@
                                     <input type="password" name="Password" class="form-control" id="loginPassword" placeholder="กรุณากรอกรหัสผ่าน">
                                 </div>
                                 <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" id="rememberMe">
-                                    <label class="form-check-label" for="rememberMe">
-                                        จำฉันไว้
-                                    </label>
+                                        <a href="Forget" class="float-end" >ลืมรหัสผ่าน</a><br>
+                                         <a href="Register" class="float-end" >ลงทะเบียนเข้าใช้ระบบ</a>
                                 </div>
                         </div>
                         <div class="modal-footer">
@@ -47,5 +45,8 @@
                     </div>
                 </div>
             </div>
+
+
+
             <br>
             <!-- Navbar End -->

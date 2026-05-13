@@ -10,27 +10,58 @@ if(isset($_POST['login'])) {
 
     $sql = "SELECT * FROM account_tb WHERE Acc_User='$User' AND Acc_Password='$Password'";
     $result = $conn->query($sql);
-    $AccID = $result->fetch_assoc()['Acc_ID'];
+    $AccResult = $result->fetch_assoc();
+    $AccID = $AccResult['Acc_ID'];
+    $AccActive = $AccResult['Acc_Active'];
     $_SESSION['Acc_ID'] = $AccID;
+   
 
-    if ($result->num_rows > 0) {
-        
-        echo "
-                    <script src='https://code.jquery.com/jquery-3.6.4.js'></script>
-                    <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
-                    <script>
-                          $(document).ready(function(){
-                            Swal.fire({
-                              title:'Login Successfully!',
-                              icon: 'success',
-                              timer: 2000,
-                              showConfirmButton: false
-                            });
-                          });
-                          </script>";
-                          header("refresh:2; url=Session");
+    
+    if ($result->num_rows > 0) 
+      {
+            if ($AccActive == 'Yes') {
 
-    } else {
+                              echo "
+                                        <script src='https://code.jquery.com/jquery-3.6.4.js'></script>
+                                        <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+                                        <script>
+                                              $(document).ready(function(){
+                                                Swal.fire({
+                                                  title:'Login Successfully!',
+                                                  icon: 'success',
+                                                  timer: 2000,
+                                                  showConfirmButton: false
+                                                });
+                                              });
+                                              </script>";
+                                              header("refresh:2; url=Session");
+              
+          }
+          else
+            {  
+                            echo "
+                                        <script src='https://code.jquery.com/jquery-3.6.4.js'></script>
+                                        <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+                                        <script>
+                                              $(document).ready(function(){
+                                                Swal.fire({
+                                                  title:'Account Not Activated!',
+                                                  text: 'Your account is not activated yet. Please wait for activation.',
+                                                  icon: 'warning',
+                                                  timer: 3000,
+                                                  showConfirmButton: false
+                                                });
+                                              });
+                                              </script>";
+                            session_destroy();
+                            header("refresh:3; url=index");
+                            exit();
+                          
+                  }
+
+    } 
+    else 
+    {
         echo "
                     <script src='https://code.jquery.com/jquery-3.6.4.js'></script>
                     <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
@@ -68,6 +99,56 @@ if(isset($_POST['logout'])) {
     session_destroy();
     unset($_SESSION['Acc_ID']);
     header("refresh:2; url=index");
+}
+
+if(isset($_POST['register'])) {
+    $Name = $_POST['Name'];
+    $Email = $_POST['Email'];
+    $Phone = $_POST['Phone'];
+    $User = $_POST['User'];
+    $Password = $_POST['Password'];
+    $ConfirmPassword = $_POST['ConfirmPassword'];
+    $RegisterDate = date('Y-m-d H:i:s');
+    
+
+
+    $salt = "1234a1%2F8{}&*%#@!";
+    $Password = hash('sha256', $Password . $salt);
+
+    $sql = "INSERT INTO account_tb (Acc_Fullname, Acc_Email, Acc_Phone, Acc_User, Acc_Password, Acc_Role ,Acc_Active, Acc_RegisterDate) VALUES ('$Name', '$Email', '$Phone', '$User', '$Password', 'User', 'Registered', '$RegisterDate')";
+    if ($conn->query($sql) === TRUE) {
+        echo "
+                    <script src='https://code.jquery.com/jquery-3.6.4.js'></script>
+                    <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+                    <script>
+                          $(document).ready(function(){
+                            Swal.fire({
+                              title:'Registration Successful!',
+                              text: 'Your account has been created.',
+                              icon: 'success',
+                              timer: 2000,
+                              showConfirmButton: false
+                            });
+                          });
+                          </script>";
+        header("refresh:2; url=index");
+    } else {
+        echo "
+                    <script src='https://code.jquery.com/jquery-3.6.4.js'></script>
+                    <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+                    <script>
+                          $(document).ready(function(){
+                            Swal.fire({
+                              title:'Registration Failed!',
+                              text: 'An error occurred while creating your account.',
+                              icon: 'error',
+                              timer: 2000,
+                              showConfirmButton: false
+                            });
+                          });
+                          </script>";
+        header("refresh:2; url=Register");
+    }
 }
 
 
