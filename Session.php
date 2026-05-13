@@ -10,13 +10,17 @@ if(isset($_SESSION['Acc_ID']) && $_SESSION['Acc_ID'] != "")
   $Acc_Result = mysqli_fetch_array($result_Acc);
   
   if($Acc_Result) {
+    $Login_Acc = $Acc_Result['Acc_ID'];
     $Login_Name = $Acc_Result['Acc_Fullname'];
     $Login_User = $Acc_Result['Acc_Username'];
     $Login_Password = $Acc_Result['Acc_Password'];
     $Login_Rule = $Acc_Result['Acc_Rule'];
     $Login_Team = $Acc_Result['Acc_Team'];
+    $Login_Site = $Acc_Result['Site_ID'];
 
     $_SESSION['Login_Name'] = $Login_Name;
+    $_SESSION['Login_Site'] = $Login_Site;
+    $_SESSION['Login_Acc'] = $Login_Acc;
     header("refresh:1; url=Home");
     exit();
   }

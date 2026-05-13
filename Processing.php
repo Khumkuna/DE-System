@@ -81,6 +81,44 @@ if(isset($_POST['login'])) {
     }
 }
 
+if(isset($_POST['CheckIn'])) {
+
+  $Login_Site = $_POST['Login_Site'];
+  $Login_Acc = $_POST['Login_Acc'];
+
+
+
+  $CheckInTime = date('Y-m-d H:i:s');
+  $ATT_ID = $Login_Site.date('Ymd');
+
+  echo $CheckInTime;
+// UPDATE `de_system_db`.`attendance_tb` SET `ATT_TimeIn` = '000' WHERE (`ATT_ID` = 'Si00120260513');
+  // $sql = "update `attendance_tb` set `ATT_TimeIn`='$CheckInTime' and `Acc_ID` = '$Login_Acc' where `ATT_ID` ='$ATT_ID' ";
+  // if ($conn->query($sql) === TRUE) {
+  //   echo "
+  //                   <script src='https://code.jquery.com/jquery-3.6.4.js'></script>
+  //                   <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+  //                   <script>
+  //                         $(document).ready(function(){
+  //                           Swal.fire({
+  //                             title:'Check-In Successful!',
+  //                             text: 'Your attendance has been recorded.',
+  //                             icon: 'success',
+  //                             timer: 2000,
+  //                             showConfirmButton: false
+  //                           });
+  //                         });
+  //                         </script>";
+  //   header("refresh:2; url=Attendance");
+  // }
+  
+
+
+
+   } 
+    
+
+
 
 if(isset($_SESSION['Acc_ID'])=="") {
 
@@ -90,7 +128,7 @@ if(isset($_SESSION['Acc_ID'])=="") {
   <script>
       $(document).ready(function(){
         Swal.fire({
-          title:'Session หมดอายุ โปรด Login เข้าระบบใหม่อีกครั้ง',
+          title:'Session มีปัญหาโปรด Login เข้าระบบใหม่อีกครั้ง',
           icon: 'error',
           timer: 2000,
           showConfirmButton: false

@@ -1,6 +1,8 @@
 <?php 
 include 'connect.php'; 
 $Login_Name = $_SESSION['Login_Name'];
+$Login_Site = $_SESSION['Login_Site'];
+$Login_Acc = $_SESSION['Login_Acc'];
 
 if ($Login_Name == '') {
         echo "

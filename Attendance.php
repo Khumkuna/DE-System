@@ -42,11 +42,14 @@ $PageActive = 'Attendance';
                      </div>   
 
                      <div class="col-sm-12 col-xl-6" >
-                        <div class="bg-light rounded d-flex align-items-center justify-content-center p-4" >
-                            <button id="capture-btn" class="btn btn-primary btn-lg rounded-circle" style="width: 240px; height: 240px; font-size: 16px;">บันทึกเข้างาน</button>
-                            <canvas id="capture-canvas" style="display:none;"></canvas>
-
-                        </div>
+                        <form id="attendance-form" method="POST" action="Processing">
+                            <input  name="Login_Site" value="<?php echo $Login_Site; ?>">
+                            <input  name="Login_Acc" value="<?php echo $Login_Acc; ?>">
+                            <div class="bg-light rounded d-flex align-items-center justify-content-center p-4" >
+                                <button id="capture-btn" class="btn btn-primary btn-lg rounded-circle" Type="submit" name="CheckIn" style="width: 240px; height: 240px; font-size: 16px;">บันทึกเข้างาน</button>
+                                <canvas id="capture-canvas" style="display:none;"></canvas>
+                            </div>
+                        </form>
                      </div>   
                 </div>
                 <br>
