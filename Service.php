@@ -2,6 +2,7 @@
 $PageActive = 'Service';
 
 $GetMonth = date('m');
+$GetYear = date('Y', strtotime("+543 year"));
 
                 $ThaiYears = array(
                         '01' => 'มกราคม','02' => 'กุมภาพันธ์','03' => 'มีนาคม','04' => 'เมษายน','05' => 'พฤษภาคม','06' => 'มิถุนายน',
@@ -48,7 +49,7 @@ $GetMonth = date('m');
                             <span class="mb-0" >
 
 
-                                <h5 style="color: #123a0d;">ข้อมูลการให้บริการของศูนย์ MS-Siam Tower ในเดือน <?php echo $MonthName ?></h5>
+                                <h5 style="color: #123a0d;">ข้อมูลการให้บริการของศูนย์ MS-Siam Tower ในเดือน <?php echo $MonthName.' '.$GetYear; ?></h5>
 
                                 <table class="table table-bordered" width="100%" style="color: #123a0d;" >
                                         <thead>
@@ -65,29 +66,34 @@ $GetMonth = date('m');
                                         </thead>
                                         <tbody>
                                             <?php
-                                            $startDate = new DateTime('2026-02-01');
-                                            $endDate = new DateTime('2026-02-28');
+                                            $ShowMonth = date('Y-m');
 
-                                            while ($startDate <= $endDate) {
-                                                $date = $startDate->format('d/m/Y');
-                                                $name = 'ชื่อผู้ใช้บริการ';
-                                                $gender = 'ชาย';
-                                                $service = 'บริการ';
-                                                $startTime = '08:00 น.';
-                                                $endTime = '17:00 น.';
-                                                $duration = '9 ชั่วโมง';
-                                                
-                                                echo "<tr align='center'>
-                                                    <td>$date</td>
-                                                    <td>$name</td>
-                                                    <td>$gender</td>
-                                                    <td>$service</td>
-                                                    <td>$startTime</td>
-                                                    <td>$endTime</td>
-                                                    <td>$duration</td>
-                                                    <td><button class='btn btn-primary btn-sm'>เครื่องมือ</button></td>
-                                                </tr>";
-                                                $startDate->modify('+1 day');
+                                            $GetServiceData = $conn->query("SELECT * FROM Survey_tb WHERE Site_ID = '$Login_Site' and Sur_MonthYear='$ShowMonth' ORDER BY Sur_ID DESC");
+                                            if ($GetServiceData->num_rows > 0) {
+                                                while ($row = $GetServiceData->fetch_assoc()) { ?>
+                                                    <tr align="center">
+                                                        <td><?php echo date('d-m-Y', strtotime($row['Sur_Date'])); ?></td>
+                                                        <td><?php echo $row['Sur_Name']; ?></td>
+                                                        <td><?php echo $row['Sur_Gender']; ?></td>
+                                                        <td><?php echo $row['Sur_Subject']; ?></td>
+                                                        <td><?php echo date('H:i:s', strtotime($row['Sur_TimeIn'])); ?></td>
+                                                        <td><?php echo date('H:i:s', strtotime($row['Sur_TimeOut'])); ?></td>
+                                                        <td>
+                                                            <?php
+                                                            $timeIn = strtotime($row['Sur_TimeIn']);
+                                                            $timeOut = strtotime($row['Sur_TimeOut']);
+                                                            $duration = $timeOut - $timeIn;
+                                                            echo gmdate('H:i:s', $duration);
+                                                            ?>
+                                                        </td>
+                                                        <td>
+                                                            <a href="ServiceDetail.php?Sur_ID=<?php echo $row['Sur_ID']; ?>" class="btn btn-primary btn-sm">ดูรายละเอียด</a>
+                                                        </td>
+                                                    </tr>
+                                                <?php
+                                                }
+                                            } else {
+                                                echo "<tr><td colspan='8' align='center' style='color: #123a0d; height: 500px;'>ไม่พบข้อมูล</td></tr>";
                                             }
                                             ?>
                                             <!-- เพิ่มข้อมูลการปฏิบัติงานอื่นๆ ที่นี่ -->

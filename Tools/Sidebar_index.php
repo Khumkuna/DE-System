@@ -15,11 +15,12 @@
                     <img src="img/BDE-Logo.png" alt="Logo" style="width: 200px; height: 80px;">
                 </a>
                 <div class="navbar-nav w-100">
-                    <a href="index" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
-                    <a href="widget.html" class="nav-item nav-link"><i class="fa fa-th me-2"></i>ศูนย์ดิจิทัลชุมชน</a>
-                    <a href="widget.html" class="nav-item nav-link"><i class="fa fa-th me-2"></i>กิจกรรม</a>
-                    <a href="form.html" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>ประชาสัมพันธ์</a>
-                    <div class="nav-item dropdown">
+                    <a href="#top" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+                    <a href="#service-section" class="nav-item nav-link"><i class="fa fa-users me-2"></i>เข้าใช้บริการ</a>
+                    <a href="#center-section" class="nav-item nav-link"><i class="fa fa-th me-2"></i>ศูนย์ดิจิทัลชุมชน</a>
+                    <a href="#activity-section" class="nav-item nav-link"><i class="fa fa-th me-2"></i>กิจกรรม</a>
+                    <a href="#news-section" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>ประชาสัมพันธ์</a>
+                    <!-- <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="far fa-file-alt me-2"></i>Pages</a>
                         <div class="dropdown-menu bg-transparent border-0">
                             <a href="signin.html" class="dropdown-item">Sign In</a>
@@ -27,7 +28,7 @@
                             <a href="404.html" class="dropdown-item">404 Error</a>
                             <a href="blank.html" class="dropdown-item">Blank Page</a>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </nav>
         </div>
