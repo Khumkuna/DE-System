@@ -82,40 +82,32 @@ if(isset($_POST['login'])) {
 }
 
 if(isset($_POST['CheckIn'])) {
-
   $Login_Site = $_POST['Login_Site'];
   $Login_Acc = $_POST['Login_Acc'];
-
-
-
-  $CheckInTime = date('Y-m-d H:i:s');
+  $CheckInTime = date('Y-m-d H:i');
   $ATT_ID = $Login_Site.date('Ymd');
 
-  echo $CheckInTime;
-// UPDATE `de_system_db`.`attendance_tb` SET `ATT_TimeIn` = '000' WHERE (`ATT_ID` = 'Si00120260513');
-  // $sql = "update `attendance_tb` set `ATT_TimeIn`='$CheckInTime' and `Acc_ID` = '$Login_Acc' where `ATT_ID` ='$ATT_ID' ";
-  // if ($conn->query($sql) === TRUE) {
-  //   echo "
-  //                   <script src='https://code.jquery.com/jquery-3.6.4.js'></script>
-  //                   <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
-  //                   <script>
-  //                         $(document).ready(function(){
-  //                           Swal.fire({
-  //                             title:'Check-In Successful!',
-  //                             text: 'Your attendance has been recorded.',
-  //                             icon: 'success',
-  //                             timer: 2000,
-  //                             showConfirmButton: false
-  //                           });
-  //                         });
-  //                         </script>";
-  //   header("refresh:2; url=Attendance");
-  // }
-  
+  $sql_Checkin = "UPDATE `de_system_db`.`attendance_tb` SET `ATT_TimeIn` = '$CheckInTime', `Acc_ID` = '$Login_Acc' WHERE (`ATT_ID` = '$ATT_ID')";
+  if ($conn->query($sql_Checkin) === TRUE) {
 
-
-
-   } 
+  $_SESSION['CheckInTimeToday'] = $CheckInTime;
+    echo "
+                    <script src='https://code.jquery.com/jquery-3.6.4.js'></script>
+                    <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+                    <script>
+                          $(document).ready(function(){
+                            Swal.fire({
+                              title:'Check-In Successful!',
+                              text: 'Your attendance has been recorded.',
+                              icon: 'success',
+                              timer: 2000,
+                              showConfirmButton: false
+                            });
+                          });
+                          </script>";
+    header("refresh:2; url=Attendance");
+  }
+} 
     
 
 
