@@ -1,5 +1,7 @@
 <?php
 $PageActive = 'AttendanceAll';
+
+
 ?>
 
 <!DOCTYPE html>
@@ -25,7 +27,7 @@ $PageActive = 'AttendanceAll';
                         <div class="bg-light rounded d-flex align-items-center justify-content-center p-4" style="color: #1ff308;" >
                         <span class="mb-0" >
                         <h1 class="mb-0" style="color: #123a0d;" >ข้อมูลการปฏิบัติงานทั้งหมด</h1><br>
-                        <h3 class="mb-0" style="color: #123a0d;" >ชื่อ: Jhon Doe</h3><br>
+                        <h3 class="mb-0" style="color: #123a0d;" >ชื่อ: <?php echo $Login_Name ;?></h3><br>
                         <h3 class="mb-0" style="color: #123a0d;" >เจ้าหน้าที่ประจำศูนย์: MS-Siam Tower</h3>
                         
                         </div>
@@ -42,35 +44,74 @@ $PageActive = 'AttendanceAll';
 
 
                                 <div class="d-flex align-items-center gap-2 mb-3">
-                                    <select class="form-select form-select-sm" style="width: 200px;">
-                                        <option selected disabled>เลือกเดือน</option>
-                                        <option value="1">มกราคม</option>
-                                        <option value="2">กุมภาพันธ์</option>
-                                        <option value="3">มีนาคม</option>
-                                        <option value="4">เมษายน</option>
-                                        <option value="5">พฤษภาคม</option>
-                                        <option value="6">มิถุนายน</option>
-                                        <option value="7">กรกฎาคม</option>
-                                        <option value="8">สิงหาคม</option>
-                                        <option value="9">กันยายน</option>
-                                        <option value="10">ตุลาคม</option>
-                                        <option value="11">พฤศจิกายน</option>
-                                        <option value="12">ธันวาคม</option>
-                                    </select>
+                                    <form method="POST" action="Attendance-All" class="d-flex align-items-center gap-2 mb-3">
+                                        <select class="form-select form-select-sm" name="MonthSearch" style="width: 200px;" >
+                                            <option selected disabled>เลือกเดือน</option>
+                                            <option value="01">มกราคม</option>
+                                            <option value="02">กุมภาพันธ์</option>
+                                            <option value="03">มีนาคม</option>
+                                            <option value="04">เมษายน</option>
+                                            <option value="05">พฤษภาคม</option>
+                                            <option value="06">มิถุนายน</option>
+                                            <option value="07">กรกฎาคม</option>
+                                            <option value="08">สิงหาคม</option>
+                                            <option value="09">กันยายน</option>
+                                            <option value="10">ตุลาคม</option>
+                                            <option value="11">พฤศจิกายน</option>
+                                            <option value="12">ธันวาคม</option>
+                                        </select>
+                                        
+                                        <select class="form-select form-select-sm" name="YearSearch" style="width: 200px;" >
+                                            <option selected disabled>เลือกปี</option>
+                                            <option value="2026">2569</option>
+                                            <option value="2027">2570</option>
+                                            <option value="2028">2571</option>
+                                        </select>
+                                        <button class="btn btn-primary btn-sm" type="submit" name="Search">แสดงข้อมูล</button>
+                                    </form>
+
                                     
-                                    <select class="form-select form-select-sm" style="width: 200px;">
-                                        <option selected disabled>เลือกปี</option>
-                                        <option value="2569">2569</option>
-                                        <option value="2570">2570</option>
-                                        <option value="2571">2571</option>
-                                    </select>
-                                    
-                                    <button class="btn btn-primary btn-sm">แสดงข้อมูล</button>
+
+
+
+
                                     <button class="btn btn-success btn-sm ms-auto">พิมพ์รายงาน</button>
+
+
                                 </div>
 
+                                <?php 
+                                        if(isset($_POST['Search']))
+                                        {
+                                            $MonthSearch = $_POST['MonthSearch'];
+                                            $YearSearch = $_POST['YearSearch'];
+                                            $MonthShow = $YearSearch.'-'.$MonthSearch;
+                                            if($MonthSearch == "" || $YearSearch = "")
+                                                {
+                                                    $MonthShow = date('Y-m');
+                                                }
+                                        }
+                                        else
+                                        {
+                                            $MonthShow = date('Y-m');
+                                        }
 
-                                <h5 style="color: #123a0d;">ข้อมูลการปฏิบัติงานของเจ้าหน้าที่ประจำศูนย์ MS-Siam Tower ในเดือนกุมภาพันธ์ 2569</h5>
+                                    
+                                    $ShowDatetime = "Select * from `de_system_db`.`attendance_tb` where  ATT_MonthYear = '$MonthShow' and Site_ID = '$Login_Site'";
+                                    $ResultShowDatetime = $conn->query($ShowDatetime);
+                                    $GetMonth = date("m",strtotime($MonthShow));
+                                    $GetYears = date("Y",strtotime($MonthShow)) + 543;
+
+
+                                    $ThaiYears = array(
+                                        '01' => 'มกราคม','02' => 'กุมภาพันธ์','03' => 'มีนาคม','04' => 'เมษายน','05' => 'พฤษภาคม','06' => 'มิถุนายน',
+                                        '07' => 'กรกฎาคม','08' => 'สิงหาคม','09' => 'กันยายน','10' => 'ตุลาคม','11' => 'พฤศจิกายน','12' => 'ธันวาคม'
+                                    );
+                                    $MonthName = $ThaiYears[$GetMonth];
+                                ?>
+
+
+                                <h5 style="color: #123a0d;">ข้อมูลการปฏิบัติงานของเจ้าหน้าที่ประจำศูนย์ MS-Siam Tower ในเดือน  <?php echo $MonthName.' '.$GetYears; ?></h5>
 
                                 <table class="table table-bordered" width="100%" style="color: #123a0d;" >
                                         <thead>
@@ -83,28 +124,53 @@ $PageActive = 'AttendanceAll';
                                                 <th>หมายเหตุ</th>
                                                 <th>ภาพถ่าย</th>
                                                 <th>พิกัดการลงเวลา</th>
+                                                <th>อุปกรณ์</th>
+                                                <th>งวดงาน</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php
-                                            $startDate = new DateTime('2026-02-01');
-                                            $endDate = new DateTime('2026-02-28');
-
-                                            while ($startDate <= $endDate) {
-                                                $dayOfWeek = ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'][$startDate->format('w')];
-                                                $date = $startDate->format('d');
-                                                echo "<tr>
-                                                    <td>$date</td>
-                                                    <td>$dayOfWeek</td>
-                                                    <td>08:00 น.</td>
-                                                    <td>17:00 น.</td>
-                                                    <td>-</td>
-                                                    <td>-</td>
-                                                    <td>-</td>
-                                                    <td>-</td>
-                                                </tr>";
-                                                $startDate->modify('+1 day');
-                                            }
+                                               
+                                                if($ResultShowDatetime->num_rows > 0) {
+                                                    while($DataShowDatetime = $ResultShowDatetime->fetch_assoc()) {
+                                                        $ThaiDays = array(
+                                                            'Monday' => 'จันทร์','Tuesday' => 'อังคาร', 'Wednesday' => 'พุธ','Thursday' => 'พฤหัสบดี','Friday' => 'ศุกร์','Saturday' => 'เสาร์', 'Sunday' => 'อาทิตย์'
+                                                        );
+                                                        
+                                                        $DayName = $ThaiDays[date("l", strtotime($DataShowDatetime['ATT_Date']))];
+                                                        $isHoliday = ($DataShowDatetime['ATT_Status'] == 'วันหยุด') ? 'background-color: #ffcccc;' : '';
+                                                        $dayOfWeek = date("l", strtotime($DataShowDatetime['ATT_Date']));
+                                                        $isWeekend = ($dayOfWeek == 'Saturday' || $dayOfWeek == 'Sunday') ? 'color: red;' : '';
+                                                        $Status = $DataShowDatetime['ATT_Status']; 
+                                                            if($Status == 'Late') {$Status = "<span style='color: red;'>สาย</span>";} 
+                                                            else if ($Status == 'On Time') {$Status = "<span style='color: green;'>ตรงเวลา</span>";} 
+                                                            else if ($Status == 'วันหยุด') {$Status = "<span style='color: blue;'>วันหยุด</span>";}
+                                                            else{$Status = "<span style='color: #123a0d;'>-</span>";}
+                                                        $TimeIn = $DataShowDatetime['ATT_TimeIn'];
+                                                        
+                                                        echo "<tr align='center' style='" . $isHoliday . $isWeekend . "'>";
+                                                        echo "<td>". date("d", strtotime($DataShowDatetime['ATT_Date'])).' ' . $MonthName . ' ' . $GetYears . "</td>";
+                                                        echo "<td>" . $DayName . "</td>";
+                                                        echo "<td>" . $DataShowDatetime['ATT_TimeIn']. "</td>";
+                                                        echo "<td>" . $DataShowDatetime['ATT_TimeOut']. "</td>";
+                                                        echo "<td>" . $Status . "</td>";
+                                                        echo "<td>" . $DataShowDatetime['ATT_Remark'] . "</td>";
+                                                        if ($DataShowDatetime['ATT_Image'] != null && $DataShowDatetime['ATT_Image'] != "") {
+                                                        echo "<td><img src='attendance_pics/attendance_images/" . $DataShowDatetime['ATT_Image'] . "' alt='ภาพถ่าย' width='25'></td>";
+                                                        echo "<td>" . $DataShowDatetime['ATT_Latitude'] . "," . $DataShowDatetime['ATT_Longitude'] . "</td>";
+                                                        echo "<td>" . $DataShowDatetime['ATT_Device'] . "</td>";
+                                                        } else {
+                                                            echo "<td>-</td>";
+                                                            echo "<td>-</td>";
+                                                            echo "<td>-</td>";
+                                                        }
+                                                        echo "<td>" . $DataShowDatetime['ATT_Work'] . "</td>";
+                                                        
+                                                        echo "</tr>";
+                                                    }
+                                                } else {
+                                                    echo "<tr><td colspan='10' align='center' style='color: #123a0d;'>ไม่พบข้อมูล</td></tr>";
+                                                }
                                             ?>
                                             <!-- เพิ่มข้อมูลการปฏิบัติงานอื่นๆ ที่นี่ -->
                                         </tbody>
@@ -138,43 +204,6 @@ $PageActive = 'AttendanceAll';
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
-    <script>
-        function updateClock() {
-            var now = new Date();
-            var day = String(now.getDate()).padStart(2, '0');
-            var month = String(now.getMonth() + 1).padStart(2, '0');
-            var year = now.getFullYear();
-            var hours = String(now.getHours()).padStart(2, '0');
-            var minutes = String(now.getMinutes()).padStart(2, '0');
-            var seconds = String(now.getSeconds()).padStart(2, '0');
-            var timeString = day + '-' + month + '-' + year + ' ' + hours + ':' + minutes + ':' + seconds;
-            document.getElementById('realtime-clock').textContent = timeString;
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-
-        // Initialize Camera
-        const video = document.getElementById('camera-feed');
-        const canvas = document.getElementById('capture-canvas');
-        const captureBtn = document.getElementById('capture-btn');
-
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then(stream => {
-                video.srcObject = stream;
-            })
-            .catch(error => {
-                console.error('Camera error:', error);
-                alert('ไม่สามารถเข้าถึงกระบวนการบันทึกเวลา: ' + error.message);
-            });
-
-        captureBtn.addEventListener('click', () => {
-            const ctx = canvas.getContext('2d');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            ctx.drawImage(video, 0, 0);
-            console.log('Photo captured');
-        });
-    </script>
 </body>
 
 </html>

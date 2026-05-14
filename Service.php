@@ -1,5 +1,13 @@
 <?php
 $PageActive = 'Service';
+
+$GetMonth = date('m');
+
+                $ThaiYears = array(
+                        '01' => 'มกราคม','02' => 'กุมภาพันธ์','03' => 'มีนาคม','04' => 'เมษายน','05' => 'พฤษภาคม','06' => 'มิถุนายน',
+                        '07' => 'กรกฎาคม','08' => 'สิงหาคม','09' => 'กันยายน','10' => 'ตุลาคม','11' => 'พฤศจิกายน','12' => 'ธันวาคม'
+                    );
+                    $MonthName = $ThaiYears[$GetMonth];
 ?>
 
 <!DOCTYPE html>
@@ -40,7 +48,7 @@ $PageActive = 'Service';
                             <span class="mb-0" >
 
 
-                                <h5 style="color: #123a0d;">ข้อมูลการให้บริการของศูนย์ MS-Siam Tower ในเดือนกุมภาพันธ์ 2569</h5>
+                                <h5 style="color: #123a0d;">ข้อมูลการให้บริการของศูนย์ MS-Siam Tower ในเดือน <?php echo $MonthName ?></h5>
 
                                 <table class="table table-bordered" width="100%" style="color: #123a0d;" >
                                         <thead>
