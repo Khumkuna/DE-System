@@ -243,203 +243,186 @@
             <br>
 
             <!-- Widgets Start -->
-            <div class="container-fluid pt-4 px-4" id="service-section">
+            <div class="container-fluid pt-4 px-4" id="center-section">
                 <h1>ข้อมูลศูนย์ดิจิทัลชุมชน</h1>
                 <hr>
                 <div class="row g-4">
-                    <div class="col-sm-12 col-md-6 col-xl-8">
-                        <div class="h-100 bg-light rounded p-4">
-                            <div class="d-flex align-items-center justify-content-between mb-2">
-                                <h6 class="mb-0">Messages</h6>
-                                <a href="">Show All</a>
-                            </div>
-                        </div>
-                    </div>
+                                    <div class="col-sm-12 col-md-6 col-xl-8">
+                                        <div class="h-100 bg-light rounded p-4">
+                                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                                <h6 class="mb-0">ข้อมูลศูนย์ดิจิทัลชุมชน</h6>
+                                                <form class="d-flex gap-2" action="" method="POST" id="searchForm">
+                                                <div class="d-flex gap-2">
+                                                    <select id="provinceSelect" name="provinceSelect" class="form-select form-select-sm" style="width: auto;">
+                                                        <option value="">-- เลือกจังหวัด --</option>
+                                                        <?php $GetSite = $conn->query("SELECT * FROM `Site_tb` GROUP BY Site_Province");
+                                                        while($row = $GetSite->fetch_assoc()){
+                                                            $province = $row['Site_Province'];
+                                                            echo "<option value='$province'>$province</option>";
+                                                        }
+                                                        ?>
+                                                    </select>
+                                                    <button type="submit" name="searchBtn" class="btn btn-sm btn-primary" id="searchBtn">ค้นหา</button>
+                                                </div>
+                                                </form>
+                                            </div>
+                                            <div id="map" style="width: 100%; height: 400px; border-radius: 5px;"></div>
+                                        </div>
+                                    </div>
+                                    <?php 
+                                        if(isset($_POST['searchBtn'])){
+                                            $selectedProvince = $_POST['provinceSelect'];
+                                            $GetSite = $conn->query("SELECT * FROM `Site_tb` WHERE Site_Province = '$selectedProvince'");
+                                            $Result = [];
+                                            while($row = $GetSite->fetch_assoc()){
+                                                
+                                                $latlong = $row['Site_latLong'];
+                                                $Getlatlong = explode('-',$latlong);
+                                                $lat = $Getlatlong[0];
+                                                $long = $Getlatlong[2];
+                                                $Result[] = [
+                                                    'name' => $row['Site_Name'],
+                                                    'lat' => $lat,
+                                                    'long' => $long
+                                                ];
+
+                                                                                         
+
+
+
+                                                // <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+                                                // <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+                                                // <script>
+                                                //     var map = L.map('map').setView([13.7563, 100.5018], 6);
+                                                //     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                                //         attribution: '© OpenStreetMap contributors'
+                                                //     }).addTo(map);
+
+                                                //     // 10 markers in Yannawa district (13.71-13.73, 100.49-100.51)
+                                                //     var markers = [
+                                                //         {lat: 13.7150, lng: 100.4950, name: 'ศูนย์ 1'},
+                                                //         {lat: 13.7165, lng: 100.4980, name: 'ศูนย์ 2'},
+                                                //         {lat: 13.7180, lng: 100.5010, name: 'ศูนย์ 3'},
+                                                //         {lat: 13.7195, lng: 100.5030, name: 'ศูนย์ 4'},
+                                                //         {lat: 13.7210, lng: 100.4970, name: 'ศูนย์ 5'},
+                                                //         {lat: 13.7225, lng: 100.5000, name: 'ศูนย์ 6'},
+                                                //         {lat: 13.7240, lng: 100.5020, name: 'ศูนย์ 7'},
+                                                //         {lat: 13.7255, lng: 100.4960, name: 'ศูนย์ 8'},
+                                                //         {lat: 13.7270, lng: 100.4990, name: 'ศูนย์ 9'},
+                                                //         {lat: 13.7285, lng: 100.5010, name: 'ศูนย์ 10'}
+                                                //     ];
+
+                                                //     markers.forEach(function(markerData) {
+                                                //         L.marker([markerData.lat, markerData.lng]).addTo(map)
+                                                //             .bindPopup(markerData.name);
+                                                //     });
+
+                                                //     document.getElementById('searchBtn').addEventListener('click', function() {
+                                                //         var selectedValue = document.getElementById('provinceSelect').value;
+                                                //         if (selectedValue) {
+                                                //             var coords = selectedValue.split(',');
+                                                //             var lat = parseFloat(coords[0]);
+                                                //             var lng = parseFloat(coords[1]);
+                                                //             var zoom = parseInt(coords[2]);
+                                                //             map.setView([lat, lng], zoom);
+                                                //         }
+                                                //     });
+                                                // </script>
+                                            }
+                                            
+                                        }
+
+                                    ?>
+
+                                    
                     
                     <div class="col-sm-12 col-md-6 col-xl-4">
                         <div class="h-100 bg-light rounded p-4">
                             <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">To Do List</h6>
-                                <a href="">Show All</a>
+                                <h6 class="mb-0">แสดงรายการที่ค้นหา</h6>
                             </div>
-                            <div class="d-flex mb-2">
-                                <input class="form-control bg-transparent" type="text" placeholder="Enter task">
-                                <button type="button" class="btn btn-primary ms-2">Add</button>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-2">
-                                <input class="form-check-input m-0" type="checkbox">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 align-items-center justify-content-between">
-                                        <span>Short task goes here...</span>
-                                        <button class="btn btn-sm"><i class="fa fa-times"></i></button>
+                            <div class="list-group">
+                                <a href="#" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">ศูนย์ 1</h6>
                                     </div>
-                                </div>
+                                    <p class="mb-1">กรุงเทพมหานคร</p>
+                                    <small>แขวงปทุมวัน</small>
+                                </a>
                             </div>
-                            <div class="d-flex align-items-center border-bottom py-2">
-                                <input class="form-check-input m-0" type="checkbox">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 align-items-center justify-content-between">
-                                        <span>Short task goes here...</span>
-                                        <button class="btn btn-sm"><i class="fa fa-times"></i></button>
-                                    </div>
-                                </div>
+                            
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-xl-12">
+                        <div class="h-100 bg-light rounded p-4">
+                            <div class="d-flex align-items-center justify-content-between mb-4">
+                                <h6 class="mb-0">แสดงรายการที่ค้นหา</h6>
                             </div>
-                            <div class="d-flex align-items-center border-bottom py-2">
-                                <input class="form-check-input m-0" type="checkbox" checked>
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 align-items-center justify-content-between">
-                                        <span><del>Short task goes here...</del></span>
-                                        <button class="btn btn-sm text-primary"><i class="fa fa-times"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-2">
-                                <input class="form-check-input m-0" type="checkbox">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 align-items-center justify-content-between">
-                                        <span>Short task goes here...</span>
-                                        <button class="btn btn-sm"><i class="fa fa-times"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center pt-2">
-                                <input class="form-check-input m-0" type="checkbox">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 align-items-center justify-content-between">
-                                        <span>Short task goes here...</span>
-                                        <button class="btn btn-sm"><i class="fa fa-times"></i></button>
-                                    </div>
-                                </div>
+                            <div class="table-responsive">
+                                <table class="table table-sm table-bordered table-hover mb-0">
+                                    <thead class="table-primary">
+                                        <tr>
+                                            <th scope="col" align="center">ลำดับ</th>
+                                            <th scope="col">ชื่อศูนย์ดิจิทัลชุมชน</th>
+                                            <th scope="col">ตำบล</th>
+                                            <th scope="col">อำเภอ</th>
+                                            <th scope="col">จังหวัด</th>
+                                            <th scope="col">พิกัด</th>
+                                        </tr>
+                                    </thead>
+                                    <?php 
+
+                                    $ShowSite = $conn->query("SELECT * FROM `Site_tb` where Site_Province = '$selectedProvince' ORDER BY Site_ID ASC");
+                                    while($row = $ShowSite->fetch_assoc()){
+                                        $Site_ID = $row['Site_ID'];
+                                        $Site_Name = $row['Site_Name'];
+                                        $Site_Province = $row['Site_Province'];
+                                        $Site_District = $row['Site_District'];
+                                        $Site_SubDistrict = $row['Site_Subdistrict'];
+                                        $Site_LatLong = $row['Site_latLong'];
+
+                                        $Getlatlong = explode('-',$Site_LatLong);
+                                        $lat1 = $Getlatlong[0]+0.001;
+                                        $lat2 = $Getlatlong[1]+0.001;
+                                        $long1 = $Getlatlong[2]+0.001;
+                                        $long2 = $Getlatlong[3]+0.001;
+                                        if($lat1 == $lat2){$lat=$lat1-0.001;}
+                                        else{$lat=$lat1;}
+
+                                        if($long1 == $long2){$long=$long1-0.001;}
+                                        else{$long=$long1;}
+                                        $LatLong = $lat.','.$long ;
+
+                                            echo "
+                                                <tbody>
+                                                    <tr>
+                                                        <td align='center'>$Site_ID</td>
+                                                        <td>$Site_Name</td>
+                                                        <td>$Site_SubDistrict</td>
+                                                        <td>$Site_District</td>
+                                                        <td>$Site_Province</td>
+                                                        <td><a href='https://maps.google.com/maps?q=$LatLong' target='_blank' class='btn btn-sm btn-info'>Google Maps</a></td>
+                                                    </tr>
+                                                </tbody>
+                                            ";
+                                        }
+                                        if($ShowSite->num_rows == 0){
+                                            echo "
+                                                <tbody>
+                                                    <tr>
+                                                        <td colspan='4' align='center'>ไม่มีข้อมูล</td>
+                                                    </tr>
+                                                </tbody>
+                                            ";
+                                        }  
+                                    ?>
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <!-- Widgets End
-
-            <!-- Widgets Start -->
-            <!-- <div class="container-fluid pt-4 px-4" id="service-section">
-                <h1>การบันทึกข้อมูลเข้าใช้บริการ</h1>
-                <hr>
-                <div class="row g-4">
-                    <div class="col-sm-12 col-md-6 col-xl-4">
-                        <div class="h-100 bg-light rounded p-4">
-                            <div class="d-flex align-items-center justify-content-between mb-2">
-                                <h6 class="mb-0">Messages</h6>
-                                <a href="">Show All</a>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-3">
-                                <img class="rounded-circle flex-shrink-0" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-0">Jhon Doe</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                    <span>Short message goes here...</span>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-3">
-                                <img class="rounded-circle flex-shrink-0" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-0">Jhon Doe</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                    <span>Short message goes here...</span>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-3">
-                                <img class="rounded-circle flex-shrink-0" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-0">Jhon Doe</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                    <span>Short message goes here...</span>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center pt-3">
-                                <img class="rounded-circle flex-shrink-0" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-0">Jhon Doe</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                    <span>Short message goes here...</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-md-6 col-xl-4">
-                        <div class="h-100 bg-light rounded p-4">
-                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">Calender</h6>
-                                <a href="">Show All</a>
-                            </div>
-                            <div id="calender"></div>
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-md-6 col-xl-4">
-                        <div class="h-100 bg-light rounded p-4">
-                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">To Do List</h6>
-                                <a href="">Show All</a>
-                            </div>
-                            <div class="d-flex mb-2">
-                                <input class="form-control bg-transparent" type="text" placeholder="Enter task">
-                                <button type="button" class="btn btn-primary ms-2">Add</button>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-2">
-                                <input class="form-check-input m-0" type="checkbox">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 align-items-center justify-content-between">
-                                        <span>Short task goes here...</span>
-                                        <button class="btn btn-sm"><i class="fa fa-times"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-2">
-                                <input class="form-check-input m-0" type="checkbox">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 align-items-center justify-content-between">
-                                        <span>Short task goes here...</span>
-                                        <button class="btn btn-sm"><i class="fa fa-times"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-2">
-                                <input class="form-check-input m-0" type="checkbox" checked>
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 align-items-center justify-content-between">
-                                        <span><del>Short task goes here...</del></span>
-                                        <button class="btn btn-sm text-primary"><i class="fa fa-times"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-2">
-                                <input class="form-check-input m-0" type="checkbox">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 align-items-center justify-content-between">
-                                        <span>Short task goes here...</span>
-                                        <button class="btn btn-sm"><i class="fa fa-times"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center pt-2">
-                                <input class="form-check-input m-0" type="checkbox">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 align-items-center justify-content-between">
-                                        <span>Short task goes here...</span>
-                                        <button class="btn btn-sm"><i class="fa fa-times"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-            <!-- Widgets End -->
-
 
             <!-- Footer Start -->
             <div class="container-fluid pt-4 px-4">
