@@ -128,8 +128,8 @@ if(isset($_POST['CheckIn'])) {
   $sql_Checkin = "UPDATE `de_system_db`.`attendance_tb` SET `ATT_TimeIn` = '$TimeNow', `Acc_ID` = '$Login_Acc', `ATT_Status` = '$Status', `ATT_Image` = '$fileName', `ATT_Latitude` = '$Lattitude', `ATT_Longitude` = '$Longitude', `ATT_Device` = '$device_info' WHERE (`ATT_ID` = '$ATT_ID')";
   if ($conn->query($sql_Checkin) === TRUE) {
 
-  $_SESSION['CheckInTimeToday'] = $CheckInTime;
-    echo "
+   $_SESSION['CheckInTimeToday'] = $CheckInTime;
+      echo "
                     <script src='https://code.jquery.com/jquery-3.6.4.js'></script>
                     <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
                     <script>
@@ -175,27 +175,92 @@ if(isset($_POST['CheckOut'])) {
     header("refresh:2; url=Attendance");
   }
 }
+
+if(isset($_POST['Modal_Save'])) {
+
+  $SiteID = $_POST['Site_ID'];
+  $fullname = $_POST['fullname'];
+  $phone = $_POST['phone'];
+  $age_range = $_POST['age_range'];
+  $services = $_POST['services'];
+  $services = implode(", ", $services); // แปลง array เป็น string โดยใช้คอมม่าและช่องว่างเป็นตัวคั่น
+  $career = $_POST['career'];
+  $career_other = $_POST['career_other'];
+  if($career_other != "") {
+    $career = $career . " - " . $career_other;
+  }
+
+
+
+  $gender = $_POST['gender'];
+  $TimeNow = date('H:i');
+  $DateNow = date('Y-m-d');
+  $MonthYearNow = date('Y-m');
+  
+  $disability_status = $_POST['disability_status'];
+  $disability_other = $_POST['disability_other'];
+
+  if($disability_other != "") {
+    $disability_detail = $disability_status . " - " . $disability_other;
+  } else {
+    $disability_detail = $disability_status;
+  }
+
+
+
+
+  if($DateNow > '2026-05-01' && $DateNow <= '2026-10-28'){$SurWork = 'งวดงานที่ 08';} 
+  else if($DateNow > '2026-10-28' && $DateNow <= '2027-04-26'){$SurWork = 'งวดงานที่ 09';} 
+  else if($DateNow > '2027-04-26' && $DateNow <= '2027-10-23'){$SurWork = 'งวดงานที่ 10';} 
+  else{$SurWork = 'งวดงานที่ 11';} 
+
+
+
+
+
+
+
+
+  $sql_Center = "INSERT INTO survey_tb (Sur_Work, Sur_Date, Sur_MonthYear, Sur_TimeIn, Sur_TimeOut, Sur_Name, Sur_National_ID, Sur_Tel, Sur_Age, Sur_Gender, Sur_Disperson, Sur_DispersonDetail, Sur_QTY, Sur_Type, Sur_Subject, Sur_Remark, Sur_Job,Site_ID) 
+  VALUES ('$SurWork', '$DateNow', '$MonthYearNow', '$TimeNow', '-', '$fullname', '-', '$phone', '$age_range', '$gender', '$disability_detail', '-', '1', 'Person', '$services', '', '$career', '$SiteID')";
+  if ($conn->query($sql_Center) === TRUE) {
+    echo "
+                    <script src='https://code.jquery.com/jquery-3.6.4.js'></script>
+                    <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+                    <script>
+                          $(document).ready(function(){
+                            Swal.fire({
+                              title:'บันทึกข้อมูลศูนย์สำเร็จ!',
+                              text: 'บันทึกข้อมูลเรียบร้อยแล้ว',
+                              icon: 'success',
+                              timer: 2000,
+                              showConfirmButton: false
+                            });
+                          });
+                          </script>";
+    header("refresh:2; url=index");
+  }
+}
     
 
 
 
-if(isset($_SESSION['Acc_ID'])=="") {
-
-  echo "
-  <script src='https://code.jquery.com/jquery-3.6.4.js'></script>
-  <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
-  <script>
-      $(document).ready(function(){
-        Swal.fire({
-          title:'Session มีปัญหาโปรด Login เข้าระบบใหม่อีกครั้ง',
-          icon: 'error',
-          timer: 2000,
-          showConfirmButton: false
+if(isset($_SESSION['Acc_ID'])=="" && $_POST['Survey']=="") {
+    echo "
+    <script src='https://code.jquery.com/jquery-3.6.4.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+    <script>
+        $(document).ready(function(){
+          Swal.fire({
+            title:'Session มีปัญหาโปรด Login เข้าระบบใหม่อีกครั้ง',
+            icon: 'error',
+            timer: 2000,
+            showConfirmButton: false
+          });
         });
-      });
-      </script>";
-  header("refresh:2; url=index");
-  exit();
+        </script>";
+    header("refresh:2; url=index");
+    exit();
 
 }
 

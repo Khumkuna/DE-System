@@ -49,11 +49,12 @@ $GetYear = date('Y', strtotime("+543 year"));
                             <span class="mb-0" >
 
 
-                                <h5 style="color: #123a0d;">ข้อมูลการให้บริการของศูนย์ MS-Siam Tower ในเดือน <?php echo $MonthName.' '.$GetYear; ?></h5>
+                                <h5 style="color: #123a0d;">ข้อมูลการให้บริการในเดือน <?php echo $MonthName.' '.$GetYear; ?></h5>
 
                                 <table class="table table-bordered" width="100%" style="color: #123a0d;" >
                                         <thead>
                                             <tr align="center">
+                                                <th>ลำดับ</th>
                                                 <th>วันที่เข้าใช้บริการ</th>
                                                 <th>ชื่อผู้เข้าใช้บริการ</th>
                                                 <th>เพศ</th>
@@ -67,21 +68,42 @@ $GetYear = date('Y', strtotime("+543 year"));
                                         <tbody>
                                             <?php
                                             $ShowMonth = date('Y-m');
+                                            $limit = 20; // จำนวนแถวต่อหน้า
+                                            $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                                            $start = ($page - 1) * $limit;
 
-                                            $GetServiceData = $conn->query("SELECT * FROM Survey_tb WHERE Site_ID = '$Login_Site' and Sur_MonthYear='$ShowMonth' ORDER BY Sur_ID DESC");
+                                            // หาจำนวนแถวทั้งหมดเพื่อคำนวณหน้า
+                                            $totalResult = $conn->query("SELECT COUNT(*) as total FROM Survey_tb WHERE Site_ID = '$Login_Site' AND Sur_MonthYear='$ShowMonth'");
+                                            $totalRows = $totalResult->fetch_assoc()['total'];
+                                            $totalPages = ceil($totalRows / $limit);
+
+                                            $GetServiceData = $conn->query("SELECT * FROM Survey_tb WHERE Site_ID = '$Login_Site' AND Sur_MonthYear='$ShowMonth' ORDER BY Sur_ID DESC LIMIT $start, $limit");
+                                            
+                                            $maxRowsDisplay = 15; // แถวขั้นต่ำที่ต้องการโชว์ในตาราง
+                                            $counter = $start + 1;
+                                            $rowCount = 0;
+
                                             if ($GetServiceData->num_rows > 0) {
-                                                while ($row = $GetServiceData->fetch_assoc()) { ?>
+                                                while ($row = $GetServiceData->fetch_assoc()) { 
+                                                    $rowCount++;
+                                                    $TimeOut = $row['Sur_TimeOut'];
+                                                    if ($TimeOut == '-') {
+                                                        $TimeOut = date('H:i:s');
+                                                    }   
+                                                    
+                                                    ?>
                                                     <tr align="center">
+                                                        <td><?php echo $counter++; ?></td>
                                                         <td><?php echo date('d-m-Y', strtotime($row['Sur_Date'])); ?></td>
                                                         <td><?php echo $row['Sur_Name']; ?></td>
                                                         <td><?php echo $row['Sur_Gender']; ?></td>
                                                         <td><?php echo $row['Sur_Subject']; ?></td>
                                                         <td><?php echo date('H:i:s', strtotime($row['Sur_TimeIn'])); ?></td>
-                                                        <td><?php echo date('H:i:s', strtotime($row['Sur_TimeOut'])); ?></td>
+                                                        <td><?php echo date('H:i:s', strtotime($TimeOut)); ?></td>
                                                         <td>
                                                             <?php
                                                             $timeIn = strtotime($row['Sur_TimeIn']);
-                                                            $timeOut = strtotime($row['Sur_TimeOut']);
+                                                            $timeOut = strtotime($TimeOut);
                                                             $duration = $timeOut - $timeIn;
                                                             echo gmdate('H:i:s', $duration);
                                                             ?>
@@ -92,30 +114,54 @@ $GetYear = date('Y', strtotime("+543 year"));
                                                     </tr>
                                                 <?php
                                                 }
+                                                
+                                                // เพิ่มแถวว่างเพื่อให้ตารางดูเต็มและสวยงาม
+                                                $remainingRows = $maxRowsDisplay - $rowCount;
+                                                for ($i = 0; $i < $remainingRows; $i++) {
+                                                    echo "<tr style='height: 45px;'>
+                                                            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                                          </tr>";
+                                                }
                                             } else {
-                                                echo "<tr><td colspan='8' align='center' style='color: #123a0d; height: 500px;'>ไม่พบข้อมูล</td></tr>";
+                                                echo "<tr><td colspan='9' align='center' style='color: #123a0d; height: 100px; vertical-align: middle;'>ไม่พบข้อมูลการใช้บริการในเดือนนี้</td></tr>";
+                                                for ($i = 0; $i < $maxRowsDisplay; $i++) {
+                                                    echo "<tr style='height: 45px;'>
+                                                            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                                          </tr>";
+                                                }
                                             }
                                             ?>
-                                            <!-- เพิ่มข้อมูลการปฏิบัติงานอื่นๆ ที่นี่ -->
                                         </tbody>
                                     </table>
+
+                                <!-- ส่วนควบคุมการแบ่งหน้า -->
+                                <nav aria-label="Page navigation" class="mt-4">
+                                    <ul class="pagination justify-content-center">
+                                        <li class="page-item <?php if($page <= 1) echo 'disabled'; ?>">
+                                            <a class="page-link" href="?page=<?php echo $page - 1; ?>">ย้อนกลับ</a>
+                                        </li>
+                                        <?php for($i = 1; $i <= $totalPages; $i++): ?>
+                                            <li class="page-item <?php if($page == $i) echo 'active'; ?>">
+                                                <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                                            </li>
+                                        <?php endfor; ?>
+                                        <li class="page-item <?php if($page >= $totalPages) echo 'disabled'; ?>">
+                                            <a class="page-link" href="?page=<?php echo $page + 1; ?>">ถัดไป</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+
                             </span>
                         </div> 
                      </div>   
                 </div>
                 <br>
             </div>
-            
-            <?php
-            include 'Tools/Footer.php'; 
-            ?>
-       
 
-        <!-- Back to Top -->
-        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
-    </div>
+            <?php include 'Tools/Footer.php'; ?>
+        </div>
+        <!-- Content End -->
 
-    <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="lib/chart/chart.min.js"></script>

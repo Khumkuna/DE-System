@@ -19,15 +19,18 @@ $PageActive= 'Home';
             <?php include 'Tools/Navbar.php'; ?>
 
 
-            <!-- Sale & Revenue Start -->
-            <div class="container-fluid pt-4 px-4">
+             <!-- Sale & Revenue Start -->
+              <?php include 'Action/Count_Home.php'; ?>
+            <div class="container-fluid pt-4 px-4" id="top">
+                <h1>ข้อมูลการให้บริการ</h1>
+                <hr>
                 <div class="row g-4">
                     <div class="col-sm-6 col-xl-3">
                         <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-chart-line fa-3x text-primary"></i>
+                            <i class="fa fa-users fa-3x text-primary"></i>
                             <div class="ms-3">
-                                <p class="mb-2">Today Sale</p>
-                                <h6 class="mb-0">$1234</h6>
+                                <p class="mb-2">ผู้เข้าใช้บริการวันนี้</p>
+                                <h6 class="mb-0 counter-value" data-target="<?php echo $TotalServiceToday; ?>">0</h6>
                             </div>
                         </div>
                     </div>
@@ -35,29 +38,21 @@ $PageActive= 'Home';
                         <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                             <i class="fa fa-chart-bar fa-3x text-primary"></i>
                             <div class="ms-3">
-                                <p class="mb-2">Total Sale</p>
-                                <h6 class="mb-0">$1234</h6>
+                                <p class="mb-2">ผู้เข้าใช้บริการเดือนนี้</p>
+                                <h6 class="mb-0 counter-value" data-target="<?php echo $TotalMonthlyService; ?>">0</h6>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6 col-xl-3">
+                    <div class="col-sm-6 col-xl-6">
                         <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                             <i class="fa fa-chart-area fa-3x text-primary"></i>
                             <div class="ms-3">
-                                <p class="mb-2">Today Revenue</p>
-                                <h6 class="mb-0">$1234</h6>
+                                <p class="mb-2">ผู้เข้าใช้บริการทั้งหมด</p>
+                                <h6 class="mb-0 counter-value" data-target="<?php echo $TotalService; ?>">0</h6>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-chart-pie fa-3x text-primary"></i>
-                            <div class="ms-3">
-                                <p class="mb-2">Total Revenue</p>
-                                <h6 class="mb-0">$1234</h6>
-                            </div>
-                        </div>
-                    </div>
+                    
                 </div>
             </div>
             <!-- Sale & Revenue End -->
@@ -69,19 +64,21 @@ $PageActive= 'Home';
                     <div class="col-sm-12 col-xl-6">
                         <div class="bg-light text-center rounded p-4">
                             <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">Worldwide Sales</h6>
-                                <a href="">Show All</a>
+                                <h6 class="mb-0">ผู้เข้าใช้บริการในแต่ละเดือน</h6>
                             </div>
-                            <canvas id="worldwide-sales"></canvas>
+                            <div style="height: 350px;">
+                                <canvas id="service-monthly-line"></canvas>
+                            </div>
                         </div>
                     </div>
                     <div class="col-sm-12 col-xl-6">
                         <div class="bg-light text-center rounded p-4">
                             <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">Salse & Revenue</h6>
-                                <a href="">Show All</a>
+                                <h6 class="mb-0">สถิติการใช้บริการแยกตามประเภท (ย้อนหลัง 5 เดือน)</h6>
                             </div>
-                            <canvas id="salse-revenue"></canvas>
+                            <div style="height: 350px;">
+                                <canvas id="service-subject-bar"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -89,79 +86,7 @@ $PageActive= 'Home';
             <!-- Sales Chart End -->
 
 
-            <!-- Recent Sales Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="bg-light text-center rounded p-4">
-                    <div class="d-flex align-items-center justify-content-between mb-4">
-                        <h6 class="mb-0">Recent Salse</h6>
-                        <a href="">Show All</a>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table text-start align-middle table-bordered table-hover mb-0">
-                            <thead>
-                                <tr class="text-dark">
-                                    <th scope="col"><input class="form-check-input" type="checkbox"></th>
-                                    <th scope="col">Date</th>
-                                    <th scope="col">Invoice</th>
-                                    <th scope="col">Customer</th>
-                                    <th scope="col">Amount</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <!-- Recent Sales End -->
-
+            
 
             <!-- Widgets Start -->
             <div class="container-fluid pt-4 px-4">
@@ -169,111 +94,117 @@ $PageActive= 'Home';
                     <div class="col-sm-12 col-md-6 col-xl-4">
                         <div class="h-100 bg-light rounded p-4">
                             <div class="d-flex align-items-center justify-content-between mb-2">
-                                <h6 class="mb-0">Messages</h6>
-                                <a href="">Show All</a>
+                                <h6 class="mb-0">ข้อมูลการเข้าใช้บริการ</h6>
                             </div>
-                            <div class="d-flex align-items-center border-bottom py-3">
-                                <img class="rounded-circle flex-shrink-0" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                            <div class="d-flex align-items-center  py-2">
                                 <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-0">Jhon Doe</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                    <span>Short message goes here...</span>
+                                    <?php 
+                                    $GetDateNow = date('Y-m-d');
+                                    $Getname = "SELECT * FROM survey_tb WHERE Site_ID = '$Login_Site' AND Sur_Date = '$GetDateNow' ORDER BY Sur_TimeIn DESC LIMIT 5";
+                                    $NameResult = $conn->query($Getname);
+                                    while($row = $NameResult->fetch_assoc()) {
+                                        $Sur_Name = $row['Sur_Name'];
+                                        $Sur_Subject = $row['Sur_Subject'];
+                                        $Sur_TimeIn = $row['Sur_TimeIn'];
+                                        $Sur_TimeOut = $row['Sur_TimeOut'];
+
+                                        if ($Sur_TimeOut == '-') {
+                                            $Sur_TimeOut = date('H:i:s');
+                                        }
+
+                                        $TimeIn = new DateTime($Sur_TimeIn);
+                                        $TimeOut = new DateTime($Sur_TimeOut);
+                                        $Duration = $TimeOut->getTimestamp() - $TimeIn->getTimestamp();
+
+                                        $Now = new DateTime();
+                                        $Diff = $Now->getTimestamp() - $TimeIn->getTimestamp();
+                                        
+                                        if ($Diff < 60) {
+                                            $TimeDisplay = "เมื่อสักครู่";
+                                        } else {
+                                            $Hours = floor($Diff / 3600);
+                                            $Minutes = floor(($Diff % 3600) / 60);
+                                            
+                                            $TimeDisplay = ($Hours > 0) ? $Hours . " ชั่วโมง " : "";
+                                            $TimeDisplay .= $Minutes . " นาทีที่ผ่านมา";
+                                        }
+
+                                        echo "<div class='d-flex w-100 align-items-center justify-content-between'>
+                                                <h6 class='mb-0'>$Sur_Subject</h6>
+                                                <small>$TimeDisplay</small>
+                                            </div>
+                                            <span>โดย $Sur_Name | เวลาเข้า: $Sur_TimeIn</span>
+                                            <br><hr>
+                                            ";
+                                            
+                                    }
+                                    ?>
+                                    
                                 </div>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-3">
-                                <img class="rounded-circle flex-shrink-0" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-0">Jhon Doe</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                    <span>Short message goes here...</span>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-3">
-                                <img class="rounded-circle flex-shrink-0" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-0">Jhon Doe</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                    <span>Short message goes here...</span>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center pt-3">
-                                <img class="rounded-circle flex-shrink-0" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-0">Jhon Doe</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                    <span>Short message goes here...</span>
-                                </div>
-                            </div>
+                             </div>   
                         </div>
                     </div>
                     <div class="col-sm-12 col-md-6 col-xl-4">
                         <div class="h-100 bg-light rounded p-4">
                             <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">Calender</h6>
-                                <a href="">Show All</a>
+                                <h6 class="mb-0">ข้อมูลกิจกรรม</h6>
                             </div>
-                            <div id="calender"></div>
+                            <div class="d-flex align-items-center  py-2">
+                                <div class="w-100 ms-3">
+                                   
+                                </div>
+                             </div>   
+
+                            
                         </div>
                     </div>
                     <div class="col-sm-12 col-md-6 col-xl-4">
                         <div class="h-100 bg-light rounded p-4">
                             <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">To Do List</h6>
+                                <h6 class="mb-0">สถานะการส่งรายงาน</h6>
                                 <a href="">Show All</a>
                             </div>
-                            <div class="d-flex mb-2">
-                                <input class="form-control bg-transparent" type="text" placeholder="Enter task">
-                                <button type="button" class="btn btn-primary ms-2">Add</button>
-                            </div>
                             <div class="d-flex align-items-center border-bottom py-2">
-                                <input class="form-check-input m-0" type="checkbox">
+                                <span>1</span>
                                 <div class="w-100 ms-3">
                                     <div class="d-flex w-100 align-items-center justify-content-between">
-                                        <span>Short task goes here...</span>
+                                        <span>รายงานการปฏิบัติงาน</span>
                                         <button class="btn btn-sm"><i class="fa fa-times"></i></button>
                                     </div>
                                 </div>
                             </div>
                             <div class="d-flex align-items-center border-bottom py-2">
-                                <input class="form-check-input m-0" type="checkbox">
+                                <span>2</span>
                                 <div class="w-100 ms-3">
                                     <div class="d-flex w-100 align-items-center justify-content-between">
-                                        <span>Short task goes here...</span>
+                                        <span>รายงานการให้บริการประชาชน + กิจกรรม</span>
                                         <button class="btn btn-sm"><i class="fa fa-times"></i></button>
                                     </div>
                                 </div>
                             </div>
                             <div class="d-flex align-items-center border-bottom py-2">
-                                <input class="form-check-input m-0" type="checkbox" checked>
+                                <span>3</span>
                                 <div class="w-100 ms-3">
                                     <div class="d-flex w-100 align-items-center justify-content-between">
-                                        <span><del>Short task goes here...</del></span>
+                                        <span><del>รายงานการตรวจสอบอุปกรณ์ (Checklist)</del></span>
                                         <button class="btn btn-sm text-primary"><i class="fa fa-times"></i></button>
                                     </div>
                                 </div>
                             </div>
                             <div class="d-flex align-items-center border-bottom py-2">
-                                <input class="form-check-input m-0" type="checkbox">
+                                <span>4</span>
                                 <div class="w-100 ms-3">
                                     <div class="d-flex w-100 align-items-center justify-content-between">
-                                        <span>Short task goes here...</span>
+                                        <span>รายงานการทดสอบอินเตอร์เน็ต Speedtest</span>
                                         <button class="btn btn-sm"><i class="fa fa-times"></i></button>
                                     </div>
                                 </div>
                             </div>
                             <div class="d-flex align-items-center pt-2">
-                                <input class="form-check-input m-0" type="checkbox">
+                                <span>5</span>
                                 <div class="w-100 ms-3">
                                     <div class="d-flex w-100 align-items-center justify-content-between">
-                                        <span>Short task goes here...</span>
+                                        <span>ใบเสร็จรับเงินค่าสนับสนุนค่าไฟฟ้า</span>
                                         <button class="btn btn-sm"><i class="fa fa-times"></i></button>
                                     </div>
                                 </div>
@@ -309,6 +240,139 @@ $PageActive= 'Home';
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+   
+
+    <script>
+        $(document).ready(function() {
+            $('.counter-value').each(function() {
+                var $this = $(this);
+                var countTo = $this.attr('data-target');
+                $({ countNum: $this.text() }).animate({
+                    countNum: countTo
+                },
+                {
+                    duration: 2000,
+                    easing: 'swing',
+                    step: function() {
+                        $this.text(Math.floor(this.countNum));
+                    },
+                    complete: function() {
+                        $this.text(this.countNum.toLocaleString());
+                    }
+                });
+            });
+        });
+
+        // Service Monthly Line Chart
+        var ctx1 = $("#service-monthly-line").get(0).getContext("2d");
+        var myChart1 = new Chart(ctx1, {
+            type: "line",
+            data: {
+                labels: [
+                "<?php echo date('M-Y', strtotime('-5 month')); ?>",
+                "<?php echo date('M-Y', strtotime('-4 month')); ?>",
+                "<?php echo date('M-Y', strtotime('-3 month')); ?>",
+                "<?php echo date('M-Y', strtotime('-2 month')); ?>", 
+                "<?php echo date('M-Y', strtotime('-1 month')); ?>", 
+                "<?php echo date('M-Y'); ?>"],
+                datasets: [{
+                    label: "ผู้เข้าใช้บริการ",
+                    data: [
+                        <?php echo $TotalLastMonthService_5; ?>, 
+                        <?php echo $TotalLastMonthService_4; ?>, 
+                        <?php echo $TotalLastMonthService_3; ?>, 
+                        <?php echo $TotalLastMonthService_2; ?>, 
+                        <?php echo $TotalLastMonthService_1; ?>, 
+                        <?php echo $TotalMonthlyService; ?>],
+                    backgroundColor: "rgba(0, 156, 255, .5)",
+                    fill: true,
+                    borderColor: "#009CFF",
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+        });
+
+        // Service Subject Bar Chart
+        <?php
+        $Months = [];
+        for ($i = 4; $i >= 0; $i--) {
+            $Months[] = date('Y-m', strtotime("-$i month"));
+        }
+        
+        $Subjects = ['อบรม', 'ประชุม/ขอใช้พื้นที่', 'สืบค้นข้อมูล', 'พิมพ์เอกสาร', 'การเรียนการสอน', 'สตูดิโอ', 'นันทนาการ'];
+        $Dataset = [];
+        
+        $Colors = [
+            "rgba(0, 156, 255, .8)", "rgba(40, 167, 69, .8)", "rgba(255, 193, 7, .8)", 
+            "rgba(220, 53, 69, .8)", "rgba(108, 117, 125, .8)", "rgba(23, 162, 184, .8)", "rgba(102, 16, 242, .8)"
+        ];
+
+        foreach($Subjects as $index => $sub) {
+            $dataPoints = [];
+            foreach($Months as $m) {
+                $res = $conn->query("SELECT COUNT(*) as total FROM Survey_tb WHERE Site_ID = '$Login_Site' AND Sur_Subject LIKE '%$sub%' AND Sur_MonthYear = '$m'")->fetch_assoc();
+                $dataPoints[] = $res['total'];
+            }
+            $Dataset[] = [
+                'label' => $sub,
+                'data' => $dataPoints,
+                'backgroundColor' => $Colors[$index]
+            ];
+        }
+        
+        $MonthLabels = [];
+        foreach($Months as $m) { $MonthLabels[] = date('M-Y', strtotime($m)); }
+        ?>
+
+        var ctx2 = $("#service-subject-bar").get(0).getContext("2d");
+        var myChart2 = new Chart(ctx2, {
+            type: "bar",
+            data: {
+                labels: <?php echo json_encode($MonthLabels); ?>,
+                datasets: <?php echo json_encode($Dataset); ?>
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom'
+                    }
+                },
+                scales: {
+                    x: {
+                        stacked: false
+                    },
+                    y: {
+                        stacked: false,
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 
 </html>

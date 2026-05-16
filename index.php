@@ -1,8 +1,60 @@
+<?php
+if (isset($_POST['find_nearest'])) {
+    error_reporting(0);
+    ini_set('display_errors', 0);
+    ob_start();
+    include 'Connect.php';
+    
+    $response = ['success' => false, 'message' => ''];
+
+    if ($conn->connect_error) {
+        $response['message'] = 'Database Connection Failed';
+    } else {
+        // ค่าที่เราต้องการหา
+        $targetLat = '13.937826';
+        $targetLng = '100.351472';
+
+        /* ใช้ SQL REGEXP_REPLACE (ถ้า MariaDB/MySQL 8.0+) 
+           หรือถ้าเอาชัวร์สุดใช้ REPLACE ซ้อนกันเพื่อลบช่องว่าง, Tab, และการขึ้นบรรทัดใหม่
+        */
+        $sql = "SELECT Site_Name, Site_ID, Site_Latitude, Site_Longitude FROM site_tb 
+                WHERE REPLACE(REPLACE(REPLACE(REPLACE(Site_Latitude, ' ', ''), '\t', ''), '\n', ''), '\r', '') LIKE '%$targetLat%'
+                AND REPLACE(REPLACE(REPLACE(REPLACE(Site_Longitude, ' ', ''), '\t', ''), '\n', ''), '\r', '') LIKE '%$targetLng%'
+                LIMIT 1";
+
+        $result = $conn->query($sql);
+
+        if ($result && $result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $response['success'] = true;
+            $response['name'] = $row['Site_Name'];
+            $response['site_id'] = $row['Site_ID'];
+        } else {
+            // ถ้ายังไม่เจออีก ผมขอ "แงะ" ข้อมูลแถวแรกใน DB ออกมาดูความยาว (Length)
+            $debug = $conn->query("SELECT Site_Latitude, Site_Longitude FROM site_tb LIMIT 1");
+            $d = $debug->fetch_assoc();
+            $lat = $d['Site_Latitude'];
+            $lng = $d['Site_Longitude'];
+            
+            $response['message'] = "หาไม่เจอ! ใน DB ตัวแรกคือ: '$lat' (ยาว ".strlen($lat).") | ค่าที่หา: '$targetLat' (ยาว ".strlen($targetLat).")";
+        }
+    }
+    $conn->close();
+    ob_end_clean();
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode($response);
+    exit(); 
+}
+?>
+
 
 <!DOCTYPE html>
 <html lang="en">
 
 <?php include 'Tools/Header_index.php'; ?>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <body>
     <div class="container-fluid position-relative bg-white d-flex p-0">
@@ -190,7 +242,7 @@
                             </div>
                             <div class="d-flex flex-column align-items-center justify-content-center py-3">
                                 <div class="attendance-container mb-3">
-                                    <button id="capture-btn" class="btn btn-primary shadow-lg btn-circle-attendance" type="button">
+                                    <button id="capture-btn" class="btn btn-primary shadow-lg btn-circle-attendance" data-bs-toggle="modal" data-bs-target="#recordModal" type="button">
                                         <div class="btn-content">
                                             <i class="fa fa-user-edit fa-2x mb-2"></i>
                                             <span>ลงชื่อเข้าใช้</span>
@@ -226,11 +278,7 @@
                                 }
                             </style>
 
-                            <script>
-                                document.getElementById('capture-btn').addEventListener('click', function() {
-                                    window.location.href = 'ServiceForm.php';
-                                });
-                            </script>
+                            
                         </div>
                     </div>
                 </div>
@@ -276,63 +324,38 @@
                                             $Result = [];
                                             while($row = $GetSite->fetch_assoc()){
                                                 
-                                                $latlong = $row['Site_latLong'];
-                                                $Getlatlong = explode('-',$latlong);
-                                                $lat = $Getlatlong[0];
-                                                $long = $Getlatlong[2];
+                                                $lat = $row['Site_Latitude'];
+                                                $long = $row['Site_Longitude'];
+
                                                 $Result[] = [
                                                     'name' => $row['Site_Name'],
                                                     'lat' => $lat,
                                                     'long' => $long
                                                 ];
-
-                                                                                         
-
-
-
-                                                // <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-                                                // <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-                                                // <script>
-                                                //     var map = L.map('map').setView([13.7563, 100.5018], 6);
-                                                //     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                                                //         attribution: '© OpenStreetMap contributors'
-                                                //     }).addTo(map);
-
-                                                //     // 10 markers in Yannawa district (13.71-13.73, 100.49-100.51)
-                                                //     var markers = [
-                                                //         {lat: 13.7150, lng: 100.4950, name: 'ศูนย์ 1'},
-                                                //         {lat: 13.7165, lng: 100.4980, name: 'ศูนย์ 2'},
-                                                //         {lat: 13.7180, lng: 100.5010, name: 'ศูนย์ 3'},
-                                                //         {lat: 13.7195, lng: 100.5030, name: 'ศูนย์ 4'},
-                                                //         {lat: 13.7210, lng: 100.4970, name: 'ศูนย์ 5'},
-                                                //         {lat: 13.7225, lng: 100.5000, name: 'ศูนย์ 6'},
-                                                //         {lat: 13.7240, lng: 100.5020, name: 'ศูนย์ 7'},
-                                                //         {lat: 13.7255, lng: 100.4960, name: 'ศูนย์ 8'},
-                                                //         {lat: 13.7270, lng: 100.4990, name: 'ศูนย์ 9'},
-                                                //         {lat: 13.7285, lng: 100.5010, name: 'ศูนย์ 10'}
-                                                //     ];
-
-                                                //     markers.forEach(function(markerData) {
-                                                //         L.marker([markerData.lat, markerData.lng]).addTo(map)
-                                                //             .bindPopup(markerData.name);
-                                                //     });
-
-                                                //     document.getElementById('searchBtn').addEventListener('click', function() {
-                                                //         var selectedValue = document.getElementById('provinceSelect').value;
-                                                //         if (selectedValue) {
-                                                //             var coords = selectedValue.split(',');
-                                                //             var lat = parseFloat(coords[0]);
-                                                //             var lng = parseFloat(coords[1]);
-                                                //             var zoom = parseInt(coords[2]);
-                                                //             map.setView([lat, lng], zoom);
-                                                //         }
-                                                //     });
-                                                // </script>
+                                                
+  
                                             }
                                             
                                         }
 
                                     ?>
+                                    <script>
+                                        var map = L.map('map').setView([13.736717, 100.523186], 5); // ตั้งค่าพิกัดเริ่มต้นและระดับการซูม
+
+                                        // เพิ่มแผนที่จาก OpenStreetMap
+                                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                        }).addTo(map);
+
+                                        // เพิ่มหมุดสำหรับแต่ละศูนย์ดิจิทัลชุมชน
+                                        <?php if(isset($Result)){ 
+                                            foreach($Result as $site){
+                                                echo "L.marker([$site[lat], $site[long]]).addTo(map).bindPopup('$site[name]').bindTooltip('$site[name]');";
+                                            }
+                                        } ?>
+                                    </script>
+                               
+
 
                                     
                     
@@ -379,19 +402,9 @@
                                         $Site_Province = $row['Site_Province'];
                                         $Site_District = $row['Site_District'];
                                         $Site_SubDistrict = $row['Site_Subdistrict'];
-                                        $Site_LatLong = $row['Site_latLong'];
-
-                                        $Getlatlong = explode('-',$Site_LatLong);
-                                        $lat1 = $Getlatlong[0]+0.001;
-                                        $lat2 = $Getlatlong[1]+0.001;
-                                        $long1 = $Getlatlong[2]+0.001;
-                                        $long2 = $Getlatlong[3]+0.001;
-                                        if($lat1 == $lat2){$lat=$lat1-0.001;}
-                                        else{$lat=$lat1;}
-
-                                        if($long1 == $long2){$long=$long1-0.001;}
-                                        else{$long=$long1;}
-                                        $LatLong = $lat.','.$long ;
+                                        $Site_Latitude = $row['Site_Latitude'];
+                                        $Site_Longitude = $row['Site_Longitude'];
+                                        $LatLong = $Site_Latitude.','.$Site_Longitude;
 
                                             echo "
                                                 <tbody>
@@ -441,6 +454,324 @@
             <!-- Footer End -->
         </div>
         <!-- Content End -->
+
+<!-- 2. ส่วนของ Bootstrap Modal HTML -->
+<div class="modal fade" id="recordModal" tabindex="-1" aria-labelledby="recordModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 24px; overflow: hidden;">
+            
+            <div class="modal-header border-0 pt-4 px-4 pb-2" style="background: linear-gradient(to right, #ffffff, #f8f9fa);">
+                <div class="d-flex align-items-center">
+                    <div class="bg-primary bg-opacity-10 p-2 rounded-3 me-3">
+                        <i class="fas fa-edit text-primary fs-4"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title fw-bold mb-0" id="recordModalLabel" style="color: #1a202c; letter-spacing: -0.5px;">
+                            บันทึกข้อมูลการเข้าใช้งาน
+                        </h5>
+                        <small class="text-muted">กรุณากรอกข้อมูลให้ครบถ้วนเพื่อสิทธิประโยชน์ของคุณ</small>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <style>
+                /* Custom CSS สำหรับความสวยงาม */
+                .section-label { font-size: 0.8rem; font-weight: 700; color: #4a5568; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; display: flex; align-items: center; }
+                .section-label::after { content: ""; flex: 1; height: 1px; background: #edf2f7; margin-left: 10px; }
+                
+                .location-card { background: #ebf8ff; border: 1px solid #bee3f8; border-radius: 16px; padding: 12px 20px; margin-bottom: 24px; transition: all 0.3s ease; }
+                
+                .center-display-box { 
+                    background: white; border: 2px solid #123a0d; border-radius: 18px; padding: 20px; 
+                    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                    position: relative; transition: transform 0.2s ease;
+                }
+                .center-display-box:hover { transform: translateY(-2px); }
+
+                .btn-outline-custom {
+                    border: 1px solid #e2e8f0; color: #4a5568; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
+                    border-radius: 12px; font-size: 0.9rem; font-weight: 500; padding: 10px; background: white;
+                }
+                .btn-check:checked + .btn-outline-custom {
+                    background-color: #123a0d !important; border-color: #123a0d !important; color: #fff !important;
+                    box-shadow: 0 4px 12px rgba(18, 58, 13, 0.2); transform: scale(1.02);
+                }
+                .btn-outline-custom:hover:not(.btn-check:checked + .btn-outline-custom) { background-color: #f7fafc; border-color: #cbd5e0; }
+
+                .form-control-lg-custom { 
+                    border-radius: 12px; padding: 14px; border: 1px solid #e2e8f0; font-size: 1rem; background-color: #f8fafc;
+                }
+                .form-control-lg-custom:focus { 
+                    border-color: #123a0d; box-shadow: 0 0 0 4px rgba(18, 58, 13, 0.08); background-color: #fff;
+                }
+
+                .btn-save-custom { 
+                    background: linear-gradient(135deg, #123a0d 0%, #22543d 100%); 
+                    color: white; border: none; padding: 14px 40px; border-radius: 14px; font-weight: 700;
+                    box-shadow: 0 10px 15px -3px rgba(18, 58, 13, 0.3); transition: all 0.3s ease;
+                }
+                .btn-save-custom:hover { color: white; transform: translateY(-2px); box-shadow: 0 20px 25px -5px rgba(18, 58, 13, 0.4); opacity: 0.95; }
+                
+                .badge-location { background: #3182ce; color: white; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+                
+                /* เอนิเมชันสำหรับช่องกรอกข้อมูลอื่นๆ */
+                .other-input-container {
+                    display: none;
+                    animation: fadeIn 0.3s ease forwards;
+                }
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(-5px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+            </style>
+
+            <form action="Processing" method="POST">
+                <div class="modal-body p-4">
+                    
+                    <!-- ส่วนพิกัด -->
+                    <div class="location-card d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center text-primary">
+                            <i class="fas fa-map-marker-alt me-2 animate-bounce"></i>
+                            <span id="modal-location-status" class="fw-bold small">กำลังระบุพิกัดปัจจุบัน...</span>
+                        </div>
+                        <span class="badge-location">GPS Active</span>
+                        <input type="hidden" name="lat" id="modal-lat">
+                        <input type="hidden" name="lng" id="modal-lng">
+                    </div>
+
+                    <!-- ศูนย์ดิจิทัลชุมชน -->
+                    <div class="mb-4">
+                        <label class="section-label">ศูนย์ดิจิทัลชุมชนที่ตรวจพบ</label>
+                        <div class="center-display-box">
+                            <div class="text-center">
+                                <i class="fas fa-university mb-2" style="color: #123a0d; font-size: 1.5rem;"></i>
+                                <h5 class="fw-bold mb-1" id="center_name_text" style="color: #123a0d;">กำลังค้นหาศูนย์ที่ใกล้ที่สุด...</h5>
+                                <button type="button" class="btn btn-sm text-primary p-0 border-0" onclick="findNearestCenter()" id="retry-btn" style="display:none; font-size: 0.75rem;">
+                                    <i class="fas fa-sync-alt me-1"></i> ตรวจสอบอีกครั้ง
+                                </button>
+                            </div>
+                            <input type="hidden" name="Site_ID" id="community_center_input" required>
+                        </div>
+                    </div>
+                    
+                    <!-- ข้อมูลส่วนตัว & เบอร์โทรศัพท์ -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label class="section-label">ข้อมูลส่วนตัว</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0" style="border-radius: 12px 0 0 12px;"><i class="far fa-user text-muted"></i></span>
+                                <input type="text" name="fullname" class="form-control form-control-lg-custom border-start-0" style="border-radius: 0 12px 12px 0;" placeholder="ชื่อ-นามสกุล ของคุณ" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="section-label">เบอร์โทรศัพท์</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0" style="border-radius: 12px 0 0 12px;"><i class="fas fa-phone-alt text-muted"></i></span>
+                                <input type="text" name="phone" class="form-control form-control-lg-custom border-start-0" style="border-radius: 0 12px 12px 0;" placeholder="08X-XXXXXXX" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- เพศ -->
+                    <div class="mb-4">
+                        <span class="section-label">เพศ</span>
+                        <div class="row g-2">
+                            <?php 
+                            $genders = ['ชาย', 'หญิง', 'ไม่ระบุ/เพศทางเลือก'];
+                            foreach($genders as $idx => $gender): ?>
+                                <div class="col">
+                                    <input type="radio" class="btn-check" name="gender" id="gender_<?=$idx?>" value="<?=$gender?>" required>
+                                    <label class="btn btn-outline-custom w-100 h-100 d-flex align-items-center justify-content-center py-2" for="gender_<?=$idx?>"><?=$gender?></label>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+
+                    <!-- อายุ -->
+                    <div class="mb-4">
+                        <span class="section-label">อายุของคุณ (โดยประมาณ)</span>
+                        <div class="row row-cols-2 row-cols-sm-4 g-2">
+                            <?php 
+                            $ages = ['น้อยกว่า 6 ปี', '6-9 ปี', '10-19 ปี', '20-29 ปี', '30-39 ปี', '40-49 ปี', '50-59 ปี', '60 ปีขึ้นไป'];
+                            foreach($ages as $idx => $age): ?>
+                                <div class="col">
+                                    <input type="radio" class="btn-check" name="age_range" id="age_<?=$idx?>" value="<?=$age?>" required>
+                                    <label class="btn btn-outline-custom w-100 h-100 d-flex align-items-center justify-content-center" for="age_<?=$idx?>"><?=$age?></label>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+
+                    <!-- อาชีพ -->
+                    <div class="mb-4">
+                        <span class="section-label">อาชีพ</span>
+                        <div class="row row-cols-2 row-cols-md-4 g-2 mb-2">
+                            <?php 
+                            $careers = ['นักเรียน/นักศึกษา', 'ข้าราชการ/รัฐวิสาหกิจ', 'พนักงานบริษัทเอกชน', 'ธุรกิจส่วนตัว/ค้าขาย', 'รับจ้างทั่วไป', 'เกษตรกร', 'พ่อบ้าน/แม่บ้าน/เกษียณ', 'อื่นๆ'];
+                            foreach($careers as $idx => $career): ?>
+                                <div class="col">
+                                    <input type="radio" class="btn-check" name="career" id="career_<?=$idx?>" value="<?=$career?>" onchange="toggleCareerOther(this)" required>
+                                    <label class="btn btn-outline-custom w-100 h-100 d-flex align-items-center justify-content-center text-center small" style="min-height: 44px; padding: 5px;" for="career_<?=$idx?>"><?=$career?></label>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                        <!-- ช่องกรอกระบุอาชีพอื่นๆ -->
+                        <div id="career_other_container" class="other-input-container mt-2">
+                            <input type="text" name="career_other" id="career_other_input" class="form-control form-control-lg-custom" placeholder="โปรดระบุอาชีพของคุณ">
+                        </div>
+                    </div>
+
+                    <!-- ข้อมูลความพิการ -->
+                    <div class="mb-4">
+                        <span class="section-label">ข้อมูลความพิการ</span>
+                        <div class="row row-cols-2 row-cols-md-3 g-2 mb-2">
+                            <?php 
+                            $disabilities = [
+                                'ไม่ใช่ผู้พิการ', 
+                                'ทางการมองเห็น', 
+                                'ทางการได้ยินหรือสื่อความหมาย', 
+                                'ทางร่างกายหรือการเคลื่อนไหว', 
+                                'ทางสติปัญญา/การเรียนรู้/ออทิสติก', 
+                                'อื่นๆ'
+                            ];
+                            foreach($disabilities as $idx => $disability): ?>
+                                <div class="col">
+                                    <input type="radio" class="btn-check" name="disability_status" id="dis_<?=$idx?>" value="<?=$disability?>" onchange="toggleDisabilityOther(this)" required>
+                                    <label class="btn btn-outline-custom w-100 h-100 d-flex align-items-center justify-content-center text-center small py-2" style="min-height: 46px;" for="dis_<?=$idx?>"><?=$disability?></label>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                        <!-- ช่องกรอกระบุความพิการอื่นๆ -->
+                        <div id="disability_other_container" class="other-input-container mt-2">
+                            <input type="text" name="disability_other" id="disability_other_input" class="form-control form-control-lg-custom" placeholder="โปรดระบุข้อมูลความพิการเพิ่มเติม">
+                        </div>
+                    </div>
+
+                    <!-- วัตถุประสงค์การใช้บริการ -->
+                    <div class="mb-2">
+                        <span class="section-label">วัตถุประสงค์การใช้บริการ</span>
+                        <div class="row row-cols-2 row-cols-md-3 g-2">
+                            <?php 
+                            $services = ['อบรม', 'ประชุม/ขอใช้พื้นที่', 'สืบค้นข้อมูล', 'พิมพ์เอกสาร', 'การเรียนการสอน', 'สตูดิโอ', 'นันทนาการ'];
+                            foreach($services as $idx => $service): ?>
+                                <div class="col">
+                                    <input type="checkbox" class="btn-check" name="services[]" id="ser_<?=$idx?>" value="<?=$service?>">
+                                    <label class="btn btn-outline-custom w-100 text-start ps-3" for="ser_<?=$idx?>">
+                                        <i class="far fa-circle me-2 opacity-50"></i><?=$service?>
+                                    </label>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer border-0 p-4 pt-0 d-flex justify-content-between">
+                    <input type="hidden" name="Survey" value="1">
+                    <button type="submit" name="Modal_Save" class="btn btn-save-custom px-5">
+                        บันทึกข้อมูล <i class="fas fa-chevron-right ms-2"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript ควบคุมการเปิด-ปิด ช่องกรอกระบุเพิ่มเติม -->
+<script>
+function toggleCareerOther(element) {
+    const container = document.getElementById('career_other_container');
+    const input = document.getElementById('career_other_input');
+    
+    if (element.value === 'อื่นๆ') {
+        container.style.display = 'block';
+        input.setAttribute('required', 'required');
+        input.focus();
+    } else {
+        container.style.display = 'none';
+        input.removeAttribute('required');
+        input.value = ''; // เคลียร์ค่าทิ้งถ้าเปลี่ยนไปเลือกข้ออื่น
+    }
+}
+
+function toggleDisabilityOther(element) {
+    const container = document.getElementById('disability_other_container');
+    const input = document.getElementById('disability_other_input');
+    
+    if (element.value === 'อื่นๆ') {
+        container.style.display = 'block';
+        input.setAttribute('required', 'required');
+        input.focus();
+    } else {
+        container.style.display = 'none';
+        input.removeAttribute('required');
+        input.value = ''; // เคลียร์ค่าทิ้งถ้าเปลี่ยนไปเลือกข้ออื่น
+    }
+}
+</script>
+
+<script>
+function findNearestCenter() {
+    const statusText = document.getElementById('modal-location-status');
+    const centerText = document.getElementById('center_name_text');
+    const centerInput = document.getElementById('community_center_input');
+    
+    statusText.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>กำลังตรวจสอบพิกัด...';
+    
+    if (!navigator.geolocation) {
+        statusText.innerText = "เบราว์เซอร์ไม่รองรับการระบุพิกัด";
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(function(position) {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+
+        document.getElementById('modal-lat').value = lat;
+        document.getElementById('modal-lng').value = lng;
+        statusText.innerText = "พิกัดปัจจุบัน: " + lat.toFixed(6) + ", " + lng.toFixed(6);
+        
+        sendToSearch(lat, lng);
+    }, function(error) {
+        statusText.innerText = "ไม่สามารถเข้าถึงพิกัดได้ (โปรดอนุญาตสิทธิ์)";
+        centerText.innerText = "กรุณาเปิด GPS และลองใหม่อีกครั้ง";
+    }, { enableHighAccuracy: true });
+}
+
+function sendToSearch(lat, lng) {
+    const centerText = document.getElementById('center_name_text');
+    const centerInput = document.getElementById('community_center_input');
+    
+    const formData = new FormData();
+    formData.append('find_nearest', '1');
+    formData.append('lat', lat);
+    formData.append('lng', lng);
+
+    fetch(window.location.href, { method: 'POST', body: formData })
+    .then(async res => {
+        const text = await res.text();
+        try { return JSON.parse(text); } 
+        catch(e) { 
+            console.error("Server Error:", text);
+            throw new Error("JSON Parse Error"); 
+        }
+    })
+    .then(data => {
+        if(data.success) {
+            centerText.innerHTML =  data.name;
+            centerInput.value = data.site_id;
+        } else {
+            centerText.style.fontSize = "0.8rem";
+            centerText.innerHTML = "<span class='text-danger'>" + data.message + "</span>";
+        }
+    })
+    .catch(err => { 
+        centerText.innerText = "เกิดข้อผิดพลาดในการเชื่อมต่อ"; 
+    });
+}
+
+document.getElementById('recordModal').addEventListener('shown.bs.modal', findNearestCenter);
+</script>
 
 
         <!-- Back to Top -->
