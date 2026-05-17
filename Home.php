@@ -19,8 +19,12 @@ $PageActive= 'Home';
             <?php include 'Tools/Navbar.php'; ?>
 
 
-             <!-- Sale & Revenue Start -->
+
               <?php include 'Action/Count_Home.php'; ?>
+              <?php include 'Action/CheckOut.php'; ?>
+              
+              
+
             <div class="container-fluid pt-4 px-4" id="top">
                 <h1>ข้อมูลการให้บริการ</h1>
                 <hr>

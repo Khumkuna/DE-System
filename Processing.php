@@ -14,8 +14,6 @@ if(isset($_POST['login'])) {
     $AccID = $AccResult['Acc_ID'];
     $AccActive = $AccResult['Acc_Active'];
     $_SESSION['Acc_ID'] = $AccID;
-   
-
     
     if ($result->num_rows > 0) 
       {
@@ -214,6 +212,19 @@ if(isset($_POST['Modal_Save'])) {
   else if($DateNow > '2027-04-26' && $DateNow <= '2027-10-23'){$SurWork = 'งวดงานที่ 10';} 
   else{$SurWork = 'งวดงานที่ 11';} 
 
+  if($gender == 'ชาย') {
+    $Sur_GenderMan = '1';
+    $Sur_GenderWoman = '0';
+    $Sur_GenderNone = '0';
+  } else if($gender == 'หญิง') {
+    $Sur_GenderMan = '0';
+    $Sur_GenderWoman = '1';
+    $Sur_GenderNone = '0';
+  } else {
+    $Sur_GenderMan = '0';
+    $Sur_GenderWoman = '0';
+    $Sur_GenderNone = '1';
+  }
 
 
 
@@ -221,8 +232,10 @@ if(isset($_POST['Modal_Save'])) {
 
 
 
-  $sql_Center = "INSERT INTO survey_tb (Sur_Work, Sur_Date, Sur_MonthYear, Sur_TimeIn, Sur_TimeOut, Sur_Name, Sur_National_ID, Sur_Tel, Sur_Age, Sur_Gender, Sur_Disperson, Sur_DispersonDetail, Sur_QTY, Sur_Type, Sur_Subject, Sur_Remark, Sur_Job,Site_ID) 
-  VALUES ('$SurWork', '$DateNow', '$MonthYearNow', '$TimeNow', '-', '$fullname', '-', '$phone', '$age_range', '$gender', '$disability_detail', '-', '1', 'Person', '$services', '', '$career', '$SiteID')";
+
+  $sql_Center = "INSERT INTO survey_tb (Sur_Work, Sur_Date, Sur_MonthYear, Sur_TimeIn, Sur_TimeOut, Sur_Name, Sur_National_ID, Sur_Tel, Sur_Age, Sur_GenderMan,Sur_GenderWoman,Sur_GenderNone, Sur_Disperson, Sur_DispersonDetail, Sur_QTY, Su
+  r_Type, Sur_Subject, Sur_Remark, Sur_Job,Site_ID) 
+  VALUES ('$SurWork', '$DateNow', '$MonthYearNow', '$TimeNow', '-', '$fullname', '-', '$phone', '$age_range', '$Sur_GenderMan', '$Sur_GenderWoman', '$Sur_GenderNone', '$disability_detail', '-', '1', 'Person', '$services', '', '$career', '$SiteID')";
   if ($conn->query($sql_Center) === TRUE) {
     echo "
                     <script src='https://code.jquery.com/jquery-3.6.4.js'></script>
@@ -241,9 +254,6 @@ if(isset($_POST['Modal_Save'])) {
     header("refresh:2; url=index");
   }
 }
-    
-
-
 
 if(isset($_SESSION['Acc_ID'])=="" && $_POST['Survey']=="") {
     echo "
@@ -334,6 +344,71 @@ if(isset($_POST['register'])) {
     }
 }
 
+if(isset($_POST['Save_Activity'])){
+  $Act_Title = $_POST['Act_Title'];
+  $Act_Date = $_POST['Act_Date'];
+  $Act_Time = $_POST['Act_Time'];
+  $Act_Duration = $_POST['Act_Duration'];
+  $Act_Participants = $_POST['Act_Participants'];
+  $Act_Detail = $_POST['Act_Detail'];
+  $Act_TargetGroup = $_POST['Act_TargetGroup'];
+  $Act_Format = $_POST['Act_Format'];
+  $Act_Location = $_POST['Act_Location'];
+  $Act_ImageA = $_FILES['Act_ImageA'];
+  $Act_ImageB = $_FILES['Act_ImageB'];
+  $Act_ImageC = $_FILES['Act_ImageC'];
+  $Act_ImageD = $_FILES['Act_ImageD'];
+  $Act_ImageE = $_FILES['Act_ImageE'];
+  $Act_AgeRange = $_POST['Act_AgeRange'];
+  $Act_Male = $_POST['Act_Male'];
 
+
+  $Act_MonthYear = date('Y-m', strtotime($Act_Date));
+
+  $Act_TimeOut = date('H:i', strtotime($Act_Time) + ($Act_Duration * 3600));
+
+
+  
+  
+
+
+
+  
+  if($Act_Date > '2026-05-01' && $Act_Date <= '2026-10-28'){$SurWork = 'งวดงานที่ 08';} 
+  else if($Act_Date > '2026-10-28' && $Act_Date <= '2027-04-26'){$SurWork = 'งวดงานที่ 09';} 
+  else if($Act_Date > '2027-04-26' && $Act_Date <= '2027-10-23'){$SurWork = 'งวดงานที่ 10';} 
+  else{$SurWork = 'งวดงานที่ 11';} 
+
+
+
+
+
+
+  $sql_Center = "INSERT INTO survey_tb (Sur_Work, Sur_Date, Sur_MonthYear, Sur_TimeIn, Sur_TimeOut, Sur_Name, Sur_Gender, Sur_Disperson, Sur_DispersonDetail, Sur_QTY, Sur_Type, Sur_Subject, Sur_Remark, Sur_Job,Site_ID) 
+  VALUES ('$SurWork', '$Act_Date', '$Act_MonthYear', '$Act_Time', '$Act_TimeOut', '[กิจกรรม] $Act_Title', '-', '$phone', '$age_range', '$gender', '$disability_detail', '-', '1', 'Person', '$services', '', '$career', '$SiteID')";
+  if ($conn->query($sql_Center) === TRUE) {
+    echo "
+                    <script src='https://code.jquery.com/jquery-3.6.4.js'></script>
+                    <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+                    <script>
+                          $(document).ready(function(){
+                            Swal.fire({
+                              title:'บันทึกข้อมูลศูนย์สำเร็จ!',
+                              text: 'บันทึกข้อมูลเรียบร้อยแล้ว',
+                              icon: 'success',
+                              timer: 2000,
+                              showConfirmButton: false
+                            });
+                          });
+                          </script>";
+    header("refresh:2; url=index");
+  }
+
+
+
+
+
+
+}
 
 ?>

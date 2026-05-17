@@ -44,46 +44,12 @@ $PageActive = 'Activity';
 
 
                             <div class="d-flex justify-content-end mb-3">
-                                        <button type="button" class="btn btn-lg btn-primary btn-lg-square" data-bs-toggle="modal" data-bs-target="#addActivityModal">
+                                <button type="button" class="btn btn-lg btn-primary btn-lg-square" data-bs-toggle="modal" data-bs-target="#addActivityModal">
                                     <i class="fa fa-plus"></i>
                                 </button>
                             </div>
 
-                            <!-- Modal -->
-                            <div class="modal fade" id="addActivityModal" tabindex="-1" aria-labelledby="addActivityLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content" style="background-color: #f8f9fa; border: 1px solid #dee2e6;">
-                                        <div class="modal-header" style="background-color: #123a0d; border-bottom: none;">
-                                            <h5 class="modal-title" id="addActivityLabel" style="color: #fff;">เพิ่มข้อมูลกิจกรรม</h5>
-                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form>
-                                                <div class="mb-3">
-                                                    <label for="activityDate" class="form-label" style="color: #123a0d;">วันที่</label>
-                                                    <input type="date" class="form-control" id="activityDate">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="activityName" class="form-label" style="color: #123a0d;">ชื่อผู้ใช้บริการ</label>
-                                                    <input type="text" class="form-control" id="activityName">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="activityGender" class="form-label" style="color: #123a0d;">เพศ</label>
-                                                    <select class="form-control" id="activityGender">
-                                                        <option>เลือก</option>
-                                                        <option>ชาย</option>
-                                                        <option>หญิง</option>
-                                                    </select>
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <div class="modal-footer" style="border-top: 1px solid #dee2e6;">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
-                                            <button type="button" class="btn btn-primary" style="background-color: #123a0d; border-color: #123a0d;">บันทึก</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            
 
 
                               
@@ -93,35 +59,15 @@ $PageActive = 'Activity';
                                 <div class="col-12">
                                     <div class="overflow-auto" style="scroll-behavior: smooth;" id="activityScroll">
                                         <div class="d-flex gap-4" style="min-width: min-content; padding: 10px;" id="activityCarousel">
-                                            <?php
-                                            $images = [
-                                                ['title' => 'กิจกรรม A', 'image' => 'img/Uploaded/Act-1.jpg', 'date' => '15 ก.พ. 2569'],
-                                                ['title' => 'กิจกรรม B', 'image' => 'img/Uploaded/Act-2.jpg', 'date' => '16 ก.พ. 2569'],
-                                                ['title' => 'กิจกรรม C', 'image' => 'img/Uploaded/Act-3.jpg', 'date' => '17 ก.พ. 2569'],
-                                                ['title' => 'กิจกรรม D', 'image' => 'img/Uploaded/Act-4.jpg', 'date' => '18 ก.พ. 2569'],
-                                                ['title' => 'กิจกรรม E', 'image' => 'img/Uploaded/Act-5.jpg', 'date' => '19 ก.พ. 2569'],
-                                                 ['title' => 'กิจกรรม F', 'image' => 'img/Uploaded/Act-6.jpg', 'date' => '20 ก.พ. 2569'],
-                                            ];
-                                            
-                                            foreach ($images as $index => $image) {
-                                                echo "
-                                                <div class='activity-card' style='flex: 0 0 280px; transition: all 0.3s ease;' data-index='{$index}'>
-                                                    <div class='card shadow-lg border-0 rounded-3' style='overflow: hidden; height: 100%; cursor: pointer; background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);'>
-                                                        <div style='position: relative; overflow: hidden;'>
-                                                            <img src='{$image['image']}' class='card-img-top' style='height: 280px; object-fit: cover; transition: transform 0.3s ease;' alt='{$image['title']}'>
-                                                            <div style='position: absolute; top: 10px; right: 10px; background-color: #123a0d; color: white; padding: 8px 12px; border-radius: 20px; font-size: 12px;'>
-                                                                <i class='fa fa-calendar'></i> {$image['date']}
-                                                            </div>
-                                                        </div>
-                                                        <div class='card-body' style='padding: 20px; background-color: #ffffff;'>
-                                                            <h5 class='card-title' style='color: #123a0d; font-weight: 600; margin-bottom: 10px;'>{$image['title']}</h5>
-                                                            <p style='color: #666; font-size: 14px; margin: 0;'>MS-Siam Tower</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                ";
-                                            }
-                                            ?>
+                                           <?php 
+                                                // หัวข้อวันที่
+
+                                           ?>
+
+
+
+
+
                                             <div class='activity-card' style='flex: 0 0 280px; transition: all 0.3s ease;'>
                                                 <div class='card shadow-lg border-0 rounded-3 d-flex align-items-center justify-content-center' style='overflow: hidden; height: 100%; cursor: pointer; background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);'>
                                                     <div class='text-center' style='padding: 40px;'>
@@ -196,6 +142,131 @@ $PageActive = 'Activity';
                      </div>   
                 </div>
                 <br>
+            </div>
+
+            <!-- Modal สำหรับเพิ่มกิจกรรม -->
+            <div class="modal fade" id="addActivityModal" tabindex="-1" aria-labelledby="addActivityModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl modal-dialog-centered">
+                    <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
+                        <div class="modal-header bg-primary text-white" style="border-radius: 20px 20px 0 0;">
+                            <h5 class="modal-title text-white" id="addActivityModalLabel"><i class="fa fa-plus-circle me-2"></i>เพิ่มข้อมูลกิจกรรมใหม่</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form action="Processing" method="POST" enctype="multipart/form-data">
+                            <div class="modal-body p-4">
+                                <div class="row g-4">
+                                    <div class="col-md-12">
+                                        <label class="form-label fw-bold">ชื่อกิจกรรม</label>
+                                        <input type="text" name="Act_Title" class="form-control form-control-lg" placeholder="ระบุชื่อกิจกรรม" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">วันที่จัดกิจกรรม</label>
+                                        <input type="date" name="Act_Date" class="form-control form-control-lg" required>
+                                    </div>
+                                     <div class="col-md-3">
+                                        <label class="form-label fw-bold">เวลาที่จัดกิจกรรม</label>
+                                        <input type="time" name="Act_Time" class="form-control form-control-lg" required>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label fw-bold">เวลาใช้เวลา</label>
+                                        <select name="Act_Duration" class="form-select form-select-lg" required>
+                                            <option value="" disabled selected>เลือกเวลาใช้เวลา</option>
+                                            <option value="1">1 ชั่วโมง</option>
+                                            <option value="2">2 ชั่วโมง</option>
+                                            <option value="3">3 ชั่วโมง</option>
+                                            <option value="4">4 ชั่วโมง</option>
+                                            <option value="5">5 ชั่วโมง</option>
+                                            <option value="6">6 ชั่วโมง</option>
+                                            <option value="7">7 ชั่วโมง</option>
+                                            <option value="8">8 ชั่วโมง</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label fw-bold">รายละเอียดกิจกรรม</label>
+                                        <textarea name="Act_Detail" class="form-control" rows="6" placeholder="อธิบายรายละเอียดการดำเนินกิจกรรม..."></textarea>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label fw-bold">กลุ่มเป้าหมาย</label>
+                                        <input type="text" name="Act_TargetGroup" class="form-control form-control-lg" placeholder="ระบุกลุ่มเป้าหมาย เช่น นักเรียน, ชุมชน, บุคลากร..." required>
+                                    </div>
+                                    <div class="col-2">
+                                        <label class="form-label fw-bold">จำนวนผู้เข้าร่วม</label>
+                                        <input type="number" name="Act_Participants" class="form-control form-control-lg" min="2" placeholder="ระบุจำนวน" required>
+                                    </div>
+                                    <div class="col-2">
+                                        <label class="form-label fw-bold">ระบุจำนวนเพศชาย</label>
+                                        <input type="number" name="Act_Male" class="form-control form-control-lg" min="0" placeholder="เพศชาย" required>
+                                    </div>
+                                    <div class="col-2">
+                                        <label class="form-label fw-bold">กำหนดช่วงอายุ</label>
+                                        <select name="Act_AgeRange" class="form-select form-select-lg" required>
+                                            <option value="" disabled selected>ช่วงอายุ</option>
+                                            <option value="น้อยกว่า 6 ปี">น้อยกว่า 6 ปี</option>
+                                            <option value="6-9 ปี">6-9 ปี</option>
+                                            <option value="10-19 ปี">10-19 ปี</option>
+                                            <option value="20-29 ปี">20-29 ปี</option>
+                                            <option value="30-39 ปี">30-39 ปี</option>
+                                            <option value="40-49 ปี">40-49 ปี</option>
+                                            <option value="50-59 ปี">50-59 ปี</option>
+                                            <option value="60 ปีขึ้นไป">60 ปีขึ้นไป</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label fw-bold">รูปแบบการจัดกิจกรรม</label>
+                                         <select name="Act_Format" class="form-select form-select-lg" required>
+                                            <option value="" disabled selected>เลือกรูปแบบ</option>
+                                            <option value="Offline">Offline (จัดกิจกรรมเฉพาะภายในศูนย์)</option>
+                                            <option value="Online">Online (จัดกิจกรรมผ่านระบบออนไลน์)</option>
+                                            <option value="Online&Offline">Online & Offline (จัดกิจกรรมทั้งภายในศูนย์และผ่านระบบออนไลน์)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-8">
+                                        <label class="form-label fw-bold">สถานที่การจัดกิจกรรม</label>
+                                        <select name="Act_Location" class="form-select form-select-lg" required>
+                                            <option value="" disabled selected>เลือกสถานที่จัดกิจกรรม</option>
+                                            <option value="ภายในศูนย์ดิจิทัลชุมชน">ภายในศูนย์ดิจิทัลชุมชน</option>
+                                            <option value="ภายในเขตของหน่วยงานหรือโรงเรียน">ภายในเขตของหน่วยงานหรือโรงเรียน</option>
+                                            <option value="นอกสถานที่">นอกสถานที่</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="col-6">
+                                        <label class="form-label fw-bold">รูปภาพกิจกรรมหลัก</label>
+                                        <input type="file" name="Act_ImageA" class="form-control form-control-lg" accept="image/*" required>
+                                        <small class="text-muted">รองรับไฟล์ .jpg, .png ขนาดไม่เกิน 5MB</small>
+                                    </div>
+
+                                    <div class="col-6">
+                                        <label class="form-label fw-bold">รูปภาพกิจกรรมรอง</label>
+                                        <input type="file" name="Act_ImageB" class="form-control form-control-lg" accept="image/*">
+                                        <small class="text-muted">รองรับไฟล์ .jpg, .png ขนาดไม่เกิน 5MB</small>
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label fw-bold">รูปภาพกิจกรรมที่ 3</label>
+                                        <input type="file" name="Act_ImageC" class="form-control form-control-lg" accept="image/*" required>
+                                        <small class="text-muted">รองรับไฟล์ .jpg, .png ขนาดไม่เกิน 5MB</small>
+                                    </div>
+
+                                   <div class="col-4">
+                                        <label class="form-label fw-bold">รูปภาพกิจกรรมที่ 4</label>
+                                        <input type="file" name="Act_ImageD" class="form-control form-control-lg" accept="image/*" required>
+                                        <small class="text-muted">รองรับไฟล์ .jpg, .png ขนาดไม่เกิน 5MB</small>
+                                    </div>
+
+                                    <div class="col-4">
+                                        <label class="form-label fw-bold">รูปภาพกิจกรรมที่ 5</label>
+                                        <input type="file" name="Act_ImageE" class="form-control form-control-lg" accept="image/*">
+                                        <small class="text-muted">รองรับไฟล์ .jpg, .png ขนาดไม่เกิน 5MB</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer border-0 p-4">
+                                <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">ยกเลิก</button>
+                                <button type="submit" name="Save_Activity" class="btn btn-primary px-5">บันทึกข้อมูล</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
             
                              <?php

@@ -8,6 +8,7 @@ if(isset($_SESSION['Acc_ID']) && $_SESSION['Acc_ID'] != "")
 
   $result_Acc = mysqli_query($conn, "SELECT * FROM account_tb WHERE Acc_ID='".mysqli_real_escape_string($conn, $AccIDLogin)."'");
   $Acc_Result = mysqli_fetch_array($result_Acc);
+
   
   if($Acc_Result) {
     $Login_Acc = $Acc_Result['Acc_ID'];
