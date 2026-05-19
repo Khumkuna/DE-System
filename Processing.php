@@ -227,14 +227,7 @@ if(isset($_POST['Modal_Save'])) {
   }
 
 
-
-
-
-
-
-
-  $sql_Center = "INSERT INTO survey_tb (Sur_Work, Sur_Date, Sur_MonthYear, Sur_TimeIn, Sur_TimeOut, Sur_Name, Sur_National_ID, Sur_Tel, Sur_Age, Sur_GenderMan,Sur_GenderWoman,Sur_GenderNone, Sur_Disperson, Sur_DispersonDetail, Sur_QTY, Su
-  r_Type, Sur_Subject, Sur_Remark, Sur_Job,Site_ID) 
+  $sql_Center = "INSERT INTO survey_tb (Sur_Work, Sur_Date, Sur_MonthYear, Sur_TimeIn, Sur_TimeOut, Sur_Name, Sur_National_ID, Sur_Tel, Sur_Age, Sur_GenderMan,Sur_GenderWoman,Sur_GenderNone, Sur_Disperson, Sur_DispersonDetail, Sur_QTY, Sur_Type, Sur_Subject, Sur_Remark, Sur_Job,Site_ID) 
   VALUES ('$SurWork', '$DateNow', '$MonthYearNow', '$TimeNow', '-', '$fullname', '-', '$phone', '$age_range', '$Sur_GenderMan', '$Sur_GenderWoman', '$Sur_GenderNone', '$disability_detail', '-', '1', 'Person', '$services', '', '$career', '$SiteID')";
   if ($conn->query($sql_Center) === TRUE) {
     echo "
@@ -361,31 +354,61 @@ if(isset($_POST['Save_Activity'])){
   $Act_ImageE = $_FILES['Act_ImageE'];
   $Act_AgeRange = $_POST['Act_AgeRange'];
   $Act_Male = $_POST['Act_Male'];
+  $SiteID = $_POST['Site_ID'];
+
+  $ChangeDateFormat = date('Ymd', strtotime($Act_Date));
+  $ChangeTimeFormat = date('His', strtotime($Act_Time));
+  $DateGenerate = $ChangeDateFormat . $ChangeTimeFormat;
+
+
+  $Sur_GenderMan = $Act_Male;
+  $Sur_GenderWoman = $Act_Participants-$Act_Male;
+
 
 
   $Act_MonthYear = date('Y-m', strtotime($Act_Date));
 
   $Act_TimeOut = date('H:i', strtotime($Act_Time) + ($Act_Duration * 3600));
-
-
-  
-  
-
-
-
   
   if($Act_Date > '2026-05-01' && $Act_Date <= '2026-10-28'){$SurWork = 'งวดงานที่ 08';} 
   else if($Act_Date > '2026-10-28' && $Act_Date <= '2027-04-26'){$SurWork = 'งวดงานที่ 09';} 
   else if($Act_Date > '2027-04-26' && $Act_Date <= '2027-10-23'){$SurWork = 'งวดงานที่ 10';} 
   else{$SurWork = 'งวดงานที่ 11';} 
 
+  $PatchImage = "D:/Upload/Activity_Images/";
+  
+  // เช็ค extension และสร้างชื่อไฟล์ใหม่
+  $imageFiles = ['Act_ImageA' => $Act_ImageA, 'Act_ImageB' => $Act_ImageB, 'Act_ImageC' => $Act_ImageC, 'Act_ImageD' => $Act_ImageD, 'Act_ImageE' => $Act_ImageE];
+  $imageNames = [];
+  $imageSuffix = ['Act_ImageA' => 'A', 'Act_ImageB' => 'B', 'Act_ImageC' => 'C', 'Act_ImageD' => 'D', 'Act_ImageE' => 'E'];
+  
+  foreach($imageFiles as $key => $image){
+    if(!empty($image['name'])){
+      $ext = pathinfo($image['name'], PATHINFO_EXTENSION);
+      $newName = $SiteID .'_' . $DateGenerate . '_' . $imageSuffix[$key] . '.' . $ext;
+      move_uploaded_file($image['tmp_name'], $PatchImage . $newName);
+      $imageNames[$key] = $newName;
+    } else {
+      $imageNames[$key] = '';
+    }
+  }
 
+  if(count($imageNames) > 0){
+     $Act_ImageA = $imageNames['Act_ImageA'];
+     $Act_ImageB = $imageNames['Act_ImageB'];
+     $Act_ImageC = $imageNames['Act_ImageC'];
+     $Act_ImageD = $imageNames['Act_ImageD'];
+     $Act_ImageE = $imageNames['Act_ImageE'];
+  } else {
+     $Act_ImageA = '';
+     $Act_ImageB = '';
+     $Act_ImageC = '';
+     $Act_ImageD = '';
+     $Act_ImageE = '';
+  }
 
-
-
-
-  $sql_Center = "INSERT INTO survey_tb (Sur_Work, Sur_Date, Sur_MonthYear, Sur_TimeIn, Sur_TimeOut, Sur_Name, Sur_Gender, Sur_Disperson, Sur_DispersonDetail, Sur_QTY, Sur_Type, Sur_Subject, Sur_Remark, Sur_Job,Site_ID) 
-  VALUES ('$SurWork', '$Act_Date', '$Act_MonthYear', '$Act_Time', '$Act_TimeOut', '[กิจกรรม] $Act_Title', '-', '$phone', '$age_range', '$gender', '$disability_detail', '-', '1', 'Person', '$services', '', '$career', '$SiteID')";
+  $sql_Center = "INSERT INTO survey_tb (Sur_Work, Sur_Date, Sur_MonthYear, Sur_TimeIn, Sur_TimeOut, Sur_Name, Sur_GenderMan, Sur_GenderWoman, Sur_GenderNone, Sur_QTY, Sur_Type, Sur_Subject, Sur_Remark, Sur_Job,Site_ID,Sur_Target,Sur_TypeACT,Sur_Location ,Sur_ImageA,Sur_ImageB,Sur_ImageC,Sur_ImageD,Sur_ImageE) 
+  VALUES ('$SurWork', '$Act_Date', '$Act_MonthYear', '$Act_Time', '$Act_TimeOut', '[กิจกรรม] $Act_Title', '$Sur_GenderMan', '$Sur_GenderWoman','0', '$Act_Participants','Activity', 'จัดกิจกรรม', '$Act_Detail', 'Group Activity', '$SiteID', '$Act_TargetGroup','$Act_Format' ,'$Act_Location', '$Act_ImageA', '$Act_ImageB', '$Act_ImageC', '$Act_ImageD', '$Act_ImageE')";
   if ($conn->query($sql_Center) === TRUE) {
     echo "
                     <script src='https://code.jquery.com/jquery-3.6.4.js'></script>
@@ -401,7 +424,7 @@ if(isset($_POST['Save_Activity'])){
                             });
                           });
                           </script>";
-    header("refresh:2; url=index");
+    header("refresh:2; url=Activity");
   }
 
 

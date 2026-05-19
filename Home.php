@@ -265,52 +265,55 @@ $PageActive= 'Home';
                     }
                 });
             });
-        });
 
-        // Service Monthly Line Chart
-        var ctx1 = $("#service-monthly-line").get(0).getContext("2d");
-        var myChart1 = new Chart(ctx1, {
-            type: "line",
-            data: {
-                labels: [
-                "<?php echo date('M-Y', strtotime('-5 month')); ?>",
-                "<?php echo date('M-Y', strtotime('-4 month')); ?>",
-                "<?php echo date('M-Y', strtotime('-3 month')); ?>",
-                "<?php echo date('M-Y', strtotime('-2 month')); ?>", 
-                "<?php echo date('M-Y', strtotime('-1 month')); ?>", 
-                "<?php echo date('M-Y'); ?>"],
-                datasets: [{
-                    label: "ผู้เข้าใช้บริการ",
-                    data: [
-                        <?php echo $TotalLastMonthService_5; ?>, 
-                        <?php echo $TotalLastMonthService_4; ?>, 
-                        <?php echo $TotalLastMonthService_3; ?>, 
-                        <?php echo $TotalLastMonthService_2; ?>, 
-                        <?php echo $TotalLastMonthService_1; ?>, 
-                        <?php echo $TotalMonthlyService; ?>],
-                    backgroundColor: "rgba(0, 156, 255, .5)",
-                    fill: true,
-                    borderColor: "#009CFF",
-                    tension: 0.4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top',
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            stepSize: 1
+            // Service Monthly Line Chart
+            var ctx1Element = $("#service-monthly-line")[0];
+            if (ctx1Element) {
+                var ctx1 = ctx1Element.getContext("2d");
+                var myChart1 = new Chart(ctx1, {
+                    type: "line",
+                    data: {
+                        labels: [
+                        "<?php echo date('M-Y', strtotime('-5 month')); ?>",
+                        "<?php echo date('M-Y', strtotime('-4 month')); ?>",
+                        "<?php echo date('M-Y', strtotime('-3 month')); ?>",
+                        "<?php echo date('M-Y', strtotime('-2 month')); ?>", 
+                        "<?php echo date('M-Y', strtotime('-1 month')); ?>", 
+                        "<?php echo date('M-Y'); ?>"],
+                        datasets: [{
+                            label: "ผู้เข้าใช้บริการ",
+                            data: [
+                                <?php echo $TotalLastMonthService_5; ?>, 
+                                <?php echo $TotalLastMonthService_4; ?>, 
+                                <?php echo $TotalLastMonthService_3; ?>, 
+                                <?php echo $TotalLastMonthService_2; ?>, 
+                                <?php echo $TotalLastMonthService_1; ?>, 
+                                <?php echo $TotalMonthlyService; ?>],
+                            backgroundColor: "rgba(0, 156, 255, .5)",
+                            fill: true,
+                            borderColor: "#009CFF",
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1
+                                }
+                            }
                         }
                     }
-                }
+                });
             }
         });
 
@@ -321,7 +324,7 @@ $PageActive= 'Home';
             $Months[] = date('Y-m', strtotime("-$i month"));
         }
         
-        $Subjects = ['อบรม', 'ประชุม/ขอใช้พื้นที่', 'สืบค้นข้อมูล', 'พิมพ์เอกสาร', 'การเรียนการสอน', 'สตูดิโอ', 'นันทนาการ'];
+        $Subjects = ['จัดกิจกรรม','อบรม', 'ประชุม/ขอใช้พื้นที่', 'สืบค้นข้อมูล', 'พิมพ์เอกสาร', 'การเรียนการสอน', 'สตูดิโอ', 'นันทนาการ'];
         $Dataset = [];
         
         $Colors = [
@@ -332,7 +335,7 @@ $PageActive= 'Home';
         foreach($Subjects as $index => $sub) {
             $dataPoints = [];
             foreach($Months as $m) {
-                $res = $conn->query("SELECT COUNT(*) as total FROM Survey_tb WHERE Site_ID = '$Login_Site' AND Sur_Subject LIKE '%$sub%' AND Sur_MonthYear = '$m'")->fetch_assoc();
+                $res = $conn->query("SELECT sum(Sur_QTY) as total FROM Survey_tb WHERE Site_ID = '$Login_Site' AND Sur_Subject LIKE '%$sub%' AND Sur_MonthYear = '$m'")->fetch_assoc();
                 $dataPoints[] = $res['total'];
             }
             $Dataset[] = [

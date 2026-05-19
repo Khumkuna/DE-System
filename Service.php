@@ -57,7 +57,6 @@ $GetYear = date('Y', strtotime("+543 year"));
                                                 <th>ลำดับ</th>
                                                 <th>วันที่เข้าใช้บริการ</th>
                                                 <th>ชื่อผู้เข้าใช้บริการ</th>
-                                                <th>เพศ</th>
                                                 <th>การใช้บริการ</th>
                                                 <th>เวลาเข้าใช้บริการ</th>
                                                 <th>เวลาออกเลิกใช้บริการ</th>
@@ -96,7 +95,6 @@ $GetYear = date('Y', strtotime("+543 year"));
                                                         <td><?php echo $counter++; ?></td>
                                                         <td><?php echo date('d-m-Y', strtotime($row['Sur_Date'])); ?></td>
                                                         <td><?php echo $row['Sur_Name']; ?></td>
-                                                        <td><?php echo $row['Sur_Gender']; ?></td>
                                                         <td><?php echo $row['Sur_Subject']; ?></td>
                                                         <td><?php echo date('H:i:s', strtotime($row['Sur_TimeIn'])); ?></td>
                                                         <td><?php echo date('H:i:s', strtotime($TimeOut)); ?></td>
@@ -126,7 +124,7 @@ $GetYear = date('Y', strtotime("+543 year"));
                                                 echo "<tr><td colspan='9' align='center' style='color: #123a0d; height: 100px; vertical-align: middle;'>ไม่พบข้อมูลการใช้บริการในเดือนนี้</td></tr>";
                                                 for ($i = 0; $i < $maxRowsDisplay; $i++) {
                                                     echo "<tr style='height: 45px;'>
-                                                            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                                            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
                                                           </tr>";
                                                 }
                                             }

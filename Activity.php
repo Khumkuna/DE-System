@@ -7,6 +7,22 @@ $PageActive = 'Activity';
 
 <?php include 'Tools/Header.php'; ?>
 
+<style>
+    /* เอฟเฟกต์การยื่นเมาส์เหนือการ์ดกิจกรรม */
+    .activity-card-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 1rem 3rem rgba(0,0,0,.155) !important;
+        transition: all 0.3s ease;
+    }
+    /* ควบคุมไม่ให้หัวข้อกิจกรรมที่ยาวเกินไปดันสัดส่วนการ์ดเสีย */
+    .text-truncate-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;  
+        overflow: hidden;
+    }
+</style>
+
 <body>
     <div class="container-fluid position-relative bg-white d-flex p-0">
         
@@ -36,12 +52,10 @@ $PageActive = 'Activity';
             <div class="container-fluid pt-4 px-4">
                 <div class="row g-4">
                     <div class="col-sm-12 col-xl-12" align="center">
-                        <div class="bg-light rounded  justify-content-center p-4" style="color: #1ff308;" >
+                        <div class="bg-light rounded justify-content-center p-4" style="color: #1ff308;" >
                             <span class="mb-0" >
                                 <h2 style="color: #123a0d;">เดือน กุมภาพันธ์ 2569</h2>
                             </span>
-
-
 
                             <div class="d-flex justify-content-end mb-3">
                                 <button type="button" class="btn btn-lg btn-primary btn-lg-square" data-bs-toggle="modal" data-bs-target="#addActivityModal">
@@ -49,95 +63,151 @@ $PageActive = 'Activity';
                                 </button>
                             </div>
 
-                            
+                            <?php 
+                                $sql_Activity = "SELECT * FROM survey_tb WHERE Site_ID = '$Login_Site' AND Sur_Type = 'Activity' ORDER BY Sur_Date DESC";
+                                $result_Activity = mysqli_query($conn, $sql_Activity);
 
+                                // เริ่มต้น Row สำหรับแสดงสไตล์ Grid การ์ดกิจกรรม
+                                echo "<div class='row g-4 mt-2 text-start'>";
 
-                              
+                                while ($row_Activity = mysqli_fetch_array($result_Activity)) {
+                                    $Act_ID = $row_Activity['Sur_ID'];
+                                    $Act_Title = $row_Activity['Sur_Name'];
+                                    $Act_Date = date('d-m-Y', strtotime($row_Activity['Sur_Date']));
+                                    $Act_Time = date('H:i', strtotime($row_Activity['Sur_TimeIn']));
+                                    $Act_Detail = !empty($row_Activity['Sur_Remark']) ? $row_Activity['Sur_Remark'] : 'ไม่มีรายละเอียดเพิ่มเติม';
+                                    $Act_TargetGroup = $row_Activity['Sur_Target'];
+                                    $Act_Format = $row_Activity['Sur_TypeACT'];
+                                    $Act_Location = $row_Activity['Sur_Location'];
+                                    $Act_Participants = $row_Activity['Sur_QTY'];
+                                    
+                                    $Act_ImageA = $row_Activity['Sur_ImageA'];
+                                    $Act_ImageB = $row_Activity['Sur_ImageB'];
+                                    $Act_ImageC = $row_Activity['Sur_ImageC'];
+                                    $Act_ImageD = $row_Activity['Sur_ImageD'];
+                                    $Act_ImageE = $row_Activity['Sur_ImageE'];
+                                    
+                                    // กรองเฉพาะรูปที่มีชื่อไฟล์อยู่จริงในฐานข้อมูลและมีไฟล์อยู่จริงบนเซิร์ฟเวอร์
+                                    $imageNames = array_filter([$Act_ImageA, $Act_ImageB, $Act_ImageC, $Act_ImageD, $Act_ImageE]);
+                                    $validImages = [];
 
-                               
-                            <div class="row g-4 mt-4">
-                                <div class="col-12">
-                                    <div class="overflow-auto" style="scroll-behavior: smooth;" id="activityScroll">
-                                        <div class="d-flex gap-4" style="min-width: min-content; padding: 10px;" id="activityCarousel">
-                                           <?php 
-                                                // หัวข้อวันที่
+                                    foreach ($imageNames as $imgName) {
+                                        $imgPath = './Upload/Activity_Images/' . $imgName;
+                                        if (!empty($imgName) && file_exists($imgPath)) {
+                                            $validImages[] = $imgPath;
+                                        }
+                                    }
 
-                                           ?>
+                                    // กำหนดภาพหน้าปกการ์ดหลัก
+                                    $coverImg = !empty($validImages) ? $validImages[0] : 'https://placehold.co/600x400?text=No+Image';
+                            ?>
+                                    <!-- การ์ดกิจกรรมแต่ละรายการ (Responsive Grid) -->
+                                    <div class='col-sm-12 col-md-6 col-xl-4'>
+                                        <div class='card h-100 shadow-sm border-0 rounded-3 position-relative d-flex flex-column activity-card-item' style='overflow: hidden;'>
+                                            <span class="badge bg-success position-absolute top-0 end-0 m-3 fs-6"><?php echo $Act_Format; ?></span>
+                                            <img src='<?php echo $coverImg; ?>' class='card-img-top' alt='Activity Cover' style='height: 220px; object-fit: cover;'>
+                                            
+                                            <div class='card-body d-flex flex-column bg-white p-4'>
+                                                <h5 class='card-title text-truncate-2' style='color: #123a0d; font-weight: bold; min-height: 48px;'><?php echo $Act_Title; ?></h5>
+                                                
+                                                <div class='card-text my-3 text-muted' style='font-size: 14px;'>
+                                                    <div class="mb-1"><i class="fa fa-calendar-alt me-2 text-success"></i> <strong>วันที่:</strong> <?php echo $Act_Date . " (" . $Act_Time . " น.)"; ?></div>
+                                                    <div class="mb-1 text-truncate"><i class="fa fa-map-marker-alt me-2 text-danger"></i> <strong>สถานที่:</strong> <?php echo $Act_Location; ?></div>
+                                                    <div class="mb-1"><i class="fa fa-users me-2 text-primary"></i> <strong>ผู้เข้าร่วม:</strong> <?php echo $Act_Participants; ?> คน</div>
+                                                </div>
+                                                
+                                                <!-- ปุ่มสำหรับคลิกเพื่อเรียกดูรูปภาพสไลด์และรายละเอียดแบบจัดเต็ม -->
+                                                <button type='button' class='btn btn-outline-success w-100 mt-auto rounded-pill fw-bold' data-bs-toggle='modal' data-bs-target='#viewActivityModal_<?php echo $Act_ID; ?>'>
+                                                    <i class="fa fa-eye me-2"></i>ดูรายละเอียดภาพและข้อมูล
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
 
-
-
-
-
-                                            <div class='activity-card' style='flex: 0 0 280px; transition: all 0.3s ease;'>
-                                                <div class='card shadow-lg border-0 rounded-3 d-flex align-items-center justify-content-center' style='overflow: hidden; height: 100%; cursor: pointer; background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);'>
-                                                    <div class='text-center' style='padding: 40px;'>
-                                                        <i class='fa fa-ellipsis-h' style='font-size: 48px; color: #123a0d; margin-bottom: 15px; display: block;'></i>
-                                                        <button class='btn btn-primary' style='background-color: #123a0d; border-color: #123a0d;'>ดูเพิ่มเติม</button>
+                                    <!-- หน้าต่างป๊อปอัป (Modal) แสดงรายละเอียดเจาะลึกประจำกิจกรรมนั้น ๆ -->
+                                    <div class="modal fade" id="viewActivityModal_<?php echo $Act_ID; ?>" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+                                            <div class="modal-content border-0 shadow-lg" style="border-radius: 15px;">
+                                                <div class="modal-header bg-dark text-white p-3">
+                                                    <h5 class="modal-title text-white"><i class="fa fa-info-circle me-2 text-success"></i>รายละเอียดข้อมูลกิจกรรม</h5>
+                                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body p-0 text-start">
+                                                    <div class="row g-0">
+                                                        <!-- ฝั่งซ้าย: แสดงสไลด์รูปภาพทั้งหมด (Bootstrap Carousel) -->
+                                                        <div class="col-lg-7 bg-light d-flex align-items-center justify-content-center" style="min-height: 400px; max-height: 550px;">
+                                                            <?php if (!empty($validImages)): ?>
+                                                                <div id="carousel_<?php echo $Act_ID; ?>" class="carousel slide w-100 h-100" data-bs-ride="carousel">
+                                                                    <div class="carousel-inner h-100">
+                                                                        <?php foreach ($validImages as $index => $imgSrc): ?>
+                                                                            <div class="carousel-item <?php echo $index === 0 ? 'active' : ''; ?> h-100">
+                                                                                <img src="<?php echo $imgSrc; ?>" class="d-block w-100" style="height: 500px; object-fit: contain; background: #1a1a1a;" alt="Activity Image">
+                                                                            </div>
+                                                                        <?php endforeach; ?>
+                                                                    </div>
+                                                                    <?php if (count($validImages) > 1): ?>
+                                                                        <button class="carousel-control-prev" type="button" data-bs-target="#carousel_<?php echo $Act_ID; ?>" data-bs-slide="prev">
+                                                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                                        </button>
+                                                                        <button class="carousel-control-next" type="button" data-bs-target="#carousel_<?php echo $Act_ID; ?>" data-bs-slide="next">
+                                                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                                        </button>
+                                                                    <?php endif; ?>
+                                                                </div>
+                                                            <?php else: ?>
+                                                                <img src="https://placehold.co/600x400?text=No+Image" class="img-fluid" alt="No image available">
+                                                            <?php endif; ?>
+                                                        </div>
+                                                        
+                                                        <!-- ฝั่งขวา: รายละเอียดเนื้อหาข้อมูล -->
+                                                        <div class="col-lg-5 p-4 d-flex flex-column bg-white">
+                                                            <span class="badge bg-success align-self-start mb-2"><?php echo $Act_Format; ?></span>
+                                                            <h3 class="fw-bold mb-3" style="color: #123a0d;"><?php echo $Act_Title; ?></h3>
+                                                            
+                                                            <div class="table-responsive">
+                                                                <table class="table table-sm table-borderless fs-6">
+                                                                    <tr>
+                                                                        <td width="35%" class="text-muted fw-bold"><i class="fa fa-calendar text-secondary me-2"></i>วันที่จัด:</td>
+                                                                        <td><?php echo $Act_Date; ?></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="text-muted fw-bold"><i class="fa fa-clock text-secondary me-2"></i>เวลาจัด:</td>
+                                                                        <td><?php echo $Act_Time; ?> น.</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="text-muted fw-bold"><i class="fa fa-map-marked text-secondary me-2"></i>สถานที่:</td>
+                                                                        <td><span class="text-wrap"><?php echo $Act_Location; ?></span></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="text-muted fw-bold"><i class="fa fa-bullseye text-secondary me-2"></i>กลุ่มเป้าหมาย:</td>
+                                                                        <td><?php echo $Act_TargetGroup; ?></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="text-muted fw-bold"><i class="fa fa-users text-secondary me-2"></i>ผู้เข้าร่วม:</td>
+                                                                        <td><span class="badge bg-light text-dark px-2 py-1"><?php echo $Act_Participants; ?> คน</span></td>
+                                                                    </tr>
+                                                                </table>
+                                                            </div>
+                                                            
+                                                            <hr class="my-2">
+                                                            <div class="flex-grow-1 overflow-auto pe-1" style="max-height: 200px;">
+                                                                <h6 class="fw-bold text-dark mb-1"><i class="fa fa-file-alt me-2 text-secondary"></i>รายละเอียดเพิ่มเติม:</h6>
+                                                                <p class="text-muted small text-break" style="text-indent: 20px; line-height: 1.6;"><?php echo nl2br($Act_Detail); ?></p>
+                                                            </div>
+                                                        </div>
                                                     </div>
+                                                </div>
+                                                <div class="modal-footer bg-light p-2">
+                                                    <button type="button" class="btn btn-secondary px-4 rounded-pill btn-sm" data-bs-dismiss="modal">ปิดหน้าต่าง</button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
+                            <?php 
+                                } // ปิด While Loop บรรทัดนี้
+                                echo "</div>"; // ปิด Row กิจกรรมหลัก
+                            ?>
 
-
-
-
-       
-
-                            <script>
-                            const carousel = document.getElementById('activityCarousel');
-                            const scrollContainer = document.getElementById('activityScroll');
-                            let isDown = false;
-                            let startX;
-                            let scrollLeft;
-
-                            scrollContainer.addEventListener('mousedown', (e) => {
-                                isDown = true;
-                                startX = e.pageX - scrollContainer.offsetLeft;
-                                scrollLeft = scrollContainer.scrollLeft;
-                            });
-
-                            scrollContainer.addEventListener('mouseleave', () => {
-                                isDown = false;
-                            });
-
-                            scrollContainer.addEventListener('mouseup', () => {
-                                isDown = false;
-                            });
-
-                            scrollContainer.addEventListener('mousemove', (e) => {
-                                if (!isDown) return;
-                                e.preventDefault();
-                                const x = e.pageX - scrollContainer.offsetLeft;
-                                const walk = (x - startX) * 1;
-                                scrollContainer.scrollLeft = scrollLeft - walk;
-                            });
-
-                            carousel.addEventListener('mousemove', (e) => {
-                                const cards = document.querySelectorAll('.activity-card');
-                                const scrollCenter = scrollContainer.scrollLeft + scrollContainer.clientWidth / 2;
-                                
-                                cards.forEach(card => {
-                                    const cardCenter = card.offsetLeft + card.offsetWidth / 2;
-                                    const distance = Math.abs(cardCenter - scrollCenter);
-                                    const maxDistance = scrollContainer.clientWidth;
-                                    const scale = Math.max(0.8, 1 - (distance / maxDistance) * 0.2);
-                                    
-                                    card.style.transform = `scale(${scale})`;
-                                    card.style.opacity = Math.max(0.6, 1 - (distance / maxDistance) * 0.4);
-                                });
-                            });
-
-                            carousel.dispatchEvent(new MouseEvent('mousemove'));
-                            scrollContainer.addEventListener('scroll', () => {
-                                carousel.dispatchEvent(new MouseEvent('mousemove'));
-                            });
-                            </script>
-
-
-                            </span>
                         </div> 
                      </div>   
                 </div>
@@ -158,6 +228,7 @@ $PageActive = 'Activity';
                                     <div class="col-md-12">
                                         <label class="form-label fw-bold">ชื่อกิจกรรม</label>
                                         <input type="text" name="Act_Title" class="form-control form-control-lg" placeholder="ระบุชื่อกิจกรรม" required>
+                                        <input type="hidden" name="Site_ID" value="<?php echo $Login_Site; ?>">
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label fw-bold">วันที่จัดกิจกรรม</label>
@@ -243,13 +314,13 @@ $PageActive = 'Activity';
                                     </div>
                                     <div class="col-4">
                                         <label class="form-label fw-bold">รูปภาพกิจกรรมที่ 3</label>
-                                        <input type="file" name="Act_ImageC" class="form-control form-control-lg" accept="image/*" required>
+                                        <input type="file" name="Act_ImageC" class="form-control form-control-lg" accept="image/*" >
                                         <small class="text-muted">รองรับไฟล์ .jpg, .png ขนาดไม่เกิน 5MB</small>
                                     </div>
 
                                    <div class="col-4">
                                         <label class="form-label fw-bold">รูปภาพกิจกรรมที่ 4</label>
-                                        <input type="file" name="Act_ImageD" class="form-control form-control-lg" accept="image/*" required>
+                                        <input type="file" name="Act_ImageD" class="form-control form-control-lg" accept="image/*" >
                                         <small class="text-muted">รองรับไฟล์ .jpg, .png ขนาดไม่เกิน 5MB</small>
                                     </div>
 
@@ -269,7 +340,7 @@ $PageActive = 'Activity';
                 </div>
             </div>
             
-                             <?php
+            <?php
             include 'Tools/Footer.php'; 
             ?>
 
@@ -312,27 +383,27 @@ $PageActive = 'Activity';
         const canvas = document.getElementById('capture-canvas');
         const captureBtn = document.getElementById('capture-btn');
 
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then(stream => {
-                video.srcObject = stream;
-            })
-            .catch(error => {
-                console.error('Camera error:', error);
-                alert('ไม่สามารถเข้าถึงกระบวนการบันทึกเวลา: ' + error.message);
+        if (video) {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    video.srcObject = stream;
+                })
+                .catch(error => {
+                    console.error('Camera error:', error);
+                    alert('ไม่สามารถเข้าถึงกระบวนการบันทึกเวลา: ' + error.message);
+                });
+        }
+
+        if (captureBtn && canvas && video) {
+            captureBtn.addEventListener('click', () => {
+                const ctx = canvas.getContext('2d');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                ctx.drawImage(video, 0, 0);
+                console.log('Photo captured');
             });
-
-        captureBtn.addEventListener('click', () => {
-            const ctx = canvas.getContext('2d');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            ctx.drawImage(video, 0, 0);
-            console.log('Photo captured');
-        });
+        }
     </script>
-
-    
-
-
 
 </body>
 
