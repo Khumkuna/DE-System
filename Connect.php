@@ -8,8 +8,9 @@ $database = "de_system_db";
 
 // Create connection
 $conn = new mysqli($servername, $username, $password,$database);
-mysqli_set_charset($conn, "SET character_set_results=utf-8");
+mysqli_set_charset($conn, "utf8mb4");
 
+$conn->query("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))");
 
 // Check connection
 if ($conn->connect_error) {

@@ -21,47 +21,93 @@
                         <span><?php echo $Login_Role; ?></span>
                     </div>
                 </div>
-                <div class="navbar-nav w-100">
-                    <a href="Home" class="nav-item nav-link <?php if($PageActive == 'Home') echo 'active'; ?>"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
-                    <div class="nav-item dropdown" >
-                        <a  class="nav-link dropdown-toggle <?php if($PageActive == 'Attendance' || $PageActive == 'AttendanceAll' || $PageActive == 'AttendanceReport') echo 'active'; ?>" data-bs-toggle="dropdown" ><i class="fa fa-calendar me-2"></i>การปฏิบัติงาน</a>
-                        <div class="dropdown-menu bg-transparent border-0 <?php if($PageActive == 'Attendance' || $PageActive == 'AttendanceAll' || $PageActive == 'AttendanceReport') echo 'show'; ?>" >
-                            <a href="Attendance" class="dropdown-item <?php if($PageActive == 'Attendance') echo 'active'; ?>" >บันทึกเวลา</a>
-                            <a href="Attendance-All" class="dropdown-item <?php if($PageActive == 'AttendanceAll') echo 'active'; ?>">ปฏิบัติงานทั้งหมด</a>
-                            <!-- <a href="blank.html" class="dropdown-item <?php if($PageActive == 'AttendanceReport') echo 'active'; ?>">รายงาน</a> -->
-                        </div>
-                    </div>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle <?php if($PageActive == 'Service' || $PageActive == 'ServiceAll' || $PageActive == 'ServiceReport') echo 'active'; ?>" data-bs-toggle="dropdown"><i class="fa fa-users me-2"></i>การให้บริการ</a>
-                        <div class="dropdown-menu bg-transparent border-0 <?php if($PageActive == 'Service' || $PageActive == 'ServiceAll' || $PageActive == 'ServiceReport') echo 'show'; ?>">
-                            <a href="Service" class="dropdown-item <?php if($PageActive == 'Service') echo 'active'; ?>">ผู้เข้าใช้บริการเดือนนี้</a>
-                            <a href="Service-All" class="dropdown-item <?php if($PageActive == 'ServiceAll') echo 'active'; ?>">ผู้เข้าใช้บริการทั้งหมด</a>
-                            <a href="Service-Report" class="dropdown-item <?php if($PageActive == 'ServiceReport') echo 'active'; ?>">รายงาน</a>
-                        </div>
-                    </div>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle <?php if($PageActive == 'Activity' || $PageActive == 'ActivityAll' || $PageActive == 'ActivityReport') echo 'active'; ?>" data-bs-toggle="dropdown"><i class="fa fa-graduation-cap me-2"></i>ข้อมูลกิจกรรม</a>
-                        <div class="dropdown-menu bg-transparent border-0 <?php if($PageActive == 'Activity' || $PageActive == 'ActivityAll' || $PageActive == 'ActivityReport') echo 'show'; ?>">
-                            <a href="Activity" class="dropdown-item <?php if($PageActive == 'Activity') echo 'active'; ?>">กิจกรรมเดือนนี้</a>
-                            <a href="Activity-All" class="dropdown-item <?php if($PageActive == 'ActivityAll') echo 'active'; ?>">กิจกรรมทั้งหมด</a>
-                            <a href="Activity-Report" class="dropdown-item <?php if($PageActive == 'ActivityReport') echo 'active'; ?>">รายงาน</a>
-                        </div>
-                    </div>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle <?php if($PageActive == 'Repair' || $PageActive == 'RepairAll') echo 'active'; ?>" data-bs-toggle="dropdown"><i class="fa fa-cogs me-2"></i>การแจ้งซ่อม</a>
-                        <div class="dropdown-menu bg-transparent border-0 <?php if($PageActive == 'Repair' || $PageActive == 'RepairAll') echo 'show'; ?>">
-                            <a href="Repair" class="dropdown-item <?php if($PageActive == 'Repair') echo 'active'; ?>">แจ้งซ่อมเดือนนี้</a>
-                            <a href="Repair-All" class="dropdown-item <?php if($PageActive == 'RepairAll') echo 'active'; ?>">แจ้งซ่อมทั้งหมด</a>
-                        </div>
-                    </div>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle <?php if($PageActive == 'Upload' || $PageActive == 'UploadAll') echo 'active'; ?>" data-bs-toggle="dropdown"><i class="far fa-file-alt me-2"></i>Upload รายงาน</a>
-                        <div class="dropdown-menu bg-transparent border-0 <?php if($PageActive == 'Upload' || $PageActive == 'UploadAll') echo 'show'; ?>">
-                            <a href="Attendance" class="dropdown-item <?php if($PageActive == 'Upload') echo 'active'; ?>">Upload รายงานเดือนนี้</a>
-                            <a href="Upload-All" class="dropdown-item <?php if($PageActive == 'UploadAll') echo 'active'; ?>">Upload รายงานทั้งหมด</a>
-                        </div>
-                    </div>
-                </div>
+
+                <?php
+                if ($Login_Role == 'Admin') {
+                    ?>
+                            <div class="navbar-nav w-100">
+                            <a href="Home" class="nav-item nav-link <?php if($PageActive == 'Home') echo 'active'; ?>"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+
+                                 <div class="nav-item dropdown">
+                                    <a  class="nav-link dropdown-toggle <?php if($PageActive == 'AttendanceCheck' || $PageActive == 'AttendanceAll' || $PageActive == 'AttendanceReport') echo 'active'; ?>" data-bs-toggle="dropdown" ><i class="fa fa-calendar me-2"></i>ข้อมูลเจ้าหน้าที่</a>
+                                    <div class="dropdown-menu bg-transparent border-0 <?php if($PageActive == 'AttendanceCheck' || $PageActive == 'AttendanceAll' || $PageActive == 'AttendanceReport') echo 'show'; ?>" >
+                                        <a href="Admin-Attendance-Check" class="dropdown-item <?php if($PageActive == 'AttendanceCheck') echo 'active'; ?>" >ขออนุมัติใช้งานระบบ</a>
+                                        <a href="Attendance-All" class="dropdown-item <?php if($PageActive == 'AttendanceAll') echo 'active'; ?>">ข้อมูลเจ้าหน้าที่ศูนย์</a>
+                                        <a href="Attendance-All" class="dropdown-item <?php if($PageActive == 'AttendanceAll') echo 'active'; ?>">สถานะการทั้งหมด</a>
+                                    </div>
+                                </div>
+
+
+
+
+                                
+                                <div class="nav-item dropdown" >
+                                    <a  class="nav-link dropdown-toggle <?php if($PageActive == 'Attendance' || $PageActive == 'AttendanceAll' || $PageActive == 'AttendanceReport') echo 'active'; ?>" data-bs-toggle="dropdown" ><i class="fa fa-calendar me-2"></i>ใบปฏิบัติงาน</a>
+                                    <div class="dropdown-menu bg-transparent border-0 <?php if($PageActive == 'Attendance' || $PageActive == 'AttendanceAll' || $PageActive == 'AttendanceReport') echo 'show'; ?>" >
+                                        <a href="Attendance" class="dropdown-item <?php if($PageActive == 'Attendance') echo 'active'; ?>" >Dashboard</a>
+                                        <a href="Attendance-All" class="dropdown-item <?php if($PageActive == 'AttendanceAll') echo 'active'; ?>">ตรวจสอบใบปฏิบัติงาน</a>
+                                        <!-- <a href="blank.html" class="dropdown-item <?php if($PageActive == 'AttendanceReport') echo 'active'; ?>">รายงาน</a> -->
+                                    </div>
+                                </div>
+
+
+                                
+                            </div>
+                <?php
+                } else { ?>
+
+                            <div class="navbar-nav w-100">
+                                <a href="Home" class="nav-item nav-link <?php if($PageActive == 'Home') echo 'active'; ?>"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+                                <div class="nav-item dropdown" >
+                                    <a  class="nav-link dropdown-toggle <?php if($PageActive == 'Attendance' || $PageActive == 'AttendanceAll' || $PageActive == 'AttendanceReport') echo 'active'; ?>" data-bs-toggle="dropdown" ><i class="fa fa-calendar me-2"></i>การปฏิบัติงาน</a>
+                                    <div class="dropdown-menu bg-transparent border-0 <?php if($PageActive == 'Attendance' || $PageActive == 'AttendanceAll' || $PageActive == 'AttendanceReport') echo 'show'; ?>" >
+                                        <a href="Attendance" class="dropdown-item <?php if($PageActive == 'Attendance') echo 'active'; ?>" >บันทึกเวลา</a>
+                                        <a href="Attendance-All" class="dropdown-item <?php if($PageActive == 'AttendanceAll') echo 'active'; ?>">ปฏิบัติงานทั้งหมด</a>
+                                        <!-- <a href="blank.html" class="dropdown-item <?php if($PageActive == 'AttendanceReport') echo 'active'; ?>">รายงาน</a> -->
+                                    </div>
+                                </div>
+                                <div class="nav-item dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle <?php if($PageActive == 'Service' || $PageActive == 'ServiceAll' || $PageActive == 'ServiceReport') echo 'active'; ?>" data-bs-toggle="dropdown"><i class="fa fa-users me-2"></i>การให้บริการ</a>
+                                    <div class="dropdown-menu bg-transparent border-0 <?php if($PageActive == 'Service' || $PageActive == 'ServiceAll' || $PageActive == 'ServiceReport') echo 'show'; ?>">
+                                        <a href="Service" class="dropdown-item <?php if($PageActive == 'Service') echo 'active'; ?>">ผู้เข้าใช้บริการเดือนนี้</a>
+                                        <a href="Service-All" class="dropdown-item <?php if($PageActive == 'ServiceAll') echo 'active'; ?>">ผู้เข้าใช้บริการทั้งหมด</a>
+                                        <a href="Service-Report" class="dropdown-item <?php if($PageActive == 'ServiceReport') echo 'active'; ?>">รายงาน</a>
+                                    </div>
+                                </div>
+                                <div class="nav-item dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle <?php if($PageActive == 'Activity' || $PageActive == 'ActivityAll' || $PageActive == 'ActivityReport') echo 'active'; ?>" data-bs-toggle="dropdown"><i class="fa fa-graduation-cap me-2"></i>ข้อมูลกิจกรรม</a>
+                                    <div class="dropdown-menu bg-transparent border-0 <?php if($PageActive == 'Activity' || $PageActive == 'ActivityAll' || $PageActive == 'ActivityReport') echo 'show'; ?>">
+                                        <a href="Activity" class="dropdown-item <?php if($PageActive == 'Activity') echo 'active'; ?>">กิจกรรมเดือนนี้</a>
+                                        <a href="Activity-All" class="dropdown-item <?php if($PageActive == 'ActivityAll') echo 'active'; ?>">กิจกรรมทั้งหมด</a>
+                                        <a href="Activity-Report" class="dropdown-item <?php if($PageActive == 'ActivityReport') echo 'active'; ?>">รายงาน</a>
+                                    </div>
+                                </div>
+                                <div class="nav-item dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle <?php if($PageActive == 'Repair' || $PageActive == 'RepairAll') echo 'active'; ?>" data-bs-toggle="dropdown"><i class="fa fa-cogs me-2"></i>การแจ้งซ่อม</a>
+                                    <div class="dropdown-menu bg-transparent border-0 <?php if($PageActive == 'Repair' || $PageActive == 'RepairAll') echo 'show'; ?>">
+                                        <a href="Repair" class="dropdown-item <?php if($PageActive == 'Repair') echo 'active'; ?>">แจ้งซ่อมเดือนนี้</a>
+                                        <a href="Repair-All" class="dropdown-item <?php if($PageActive == 'RepairAll') echo 'active'; ?>">แจ้งซ่อมทั้งหมด</a>
+                                    </div>
+                                </div>
+                                <div class="nav-item dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle <?php if($PageActive == 'Upload' || $PageActive == 'UploadAll') echo 'active'; ?>" data-bs-toggle="dropdown"><i class="far fa-file-alt me-2"></i>Upload รายงาน</a>
+                                    <div class="dropdown-menu bg-transparent border-0 <?php if($PageActive == 'Upload' || $PageActive == 'UploadAll') echo 'show'; ?>">
+                                        <a href="Attendance" class="dropdown-item <?php if($PageActive == 'Upload') echo 'active'; ?>">Upload รายงานเดือนนี้</a>
+                                        <a href="Upload-All" class="dropdown-item <?php if($PageActive == 'UploadAll') echo 'active'; ?>">Upload รายงานทั้งหมด</a>
+                                    </div>
+                                </div>
+                            </div>
+                <?php             
+                }
+                ?>
+
+
+
+                
             </nav>
         </div>
         <!-- Sidebar End -->
+
+
+
+                                    

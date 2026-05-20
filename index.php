@@ -7,36 +7,44 @@ if (isset($_POST['find_nearest'])) {
     
     $response = ['success' => false, 'message' => ''];
 
-    if ($conn->connect_error) {
+    // ตรวจสอบว่ามีพิกัดส่งมาจาก GPS หรือไม่
+    if (!isset($_POST['lat']) || !isset($_POST['lng'])) {
+        $response['message'] = 'ไม่พบพิกัด GPS ส่งมาจากหน้าบ้าน';
+    } else if ($conn->connect_error) {
         $response['message'] = 'Database Connection Failed';
     } else {
-        // ค่าที่เราต้องการหา
-        $targetLat = '13.937826';
-        $targetLng = '100.351472';
+        // รับค่าพิกัดจริงจาก GPS (แปลงเป็น float เพื่อความปลอดภัยของข้อมูล)
+        $targetLat = (float)$_POST['lat'];
+        $targetLng = (float)$_POST['lng'];
+        
+        // รัศมีค้นหา (กิโลเมตร) ขยายเป็น 100 กม. เผื่อผู้ใช้อยู่ในพื้นที่ห่างไกล
+        $maxDistanceKm = 100; 
 
-        /* ใช้ SQL REGEXP_REPLACE (ถ้า MariaDB/MySQL 8.0+) 
-           หรือถ้าเอาชัวร์สุดใช้ REPLACE ซ้อนกันเพื่อลบช่องว่าง, Tab, และการขึ้นบรรทัดใหม่
-        */
-        $sql = "SELECT Site_Name, Site_ID, Site_Latitude, Site_Longitude FROM site_tb 
-                WHERE REPLACE(REPLACE(REPLACE(REPLACE(Site_Latitude, ' ', ''), '\t', ''), '\n', ''), '\r', '') LIKE '%$targetLat%'
-                AND REPLACE(REPLACE(REPLACE(REPLACE(Site_Longitude, ' ', ''), '\t', ''), '\n', ''), '\r', '') LIKE '%$targetLng%'
+        // ใช้สูตร Haversine คำนวณหาจุดที่ใกล้ที่สุดจากพิกัด GPS ปัจจุบัน
+        $sql = "SELECT Site_Name, Site_ID, Site_Latitude, Site_Longitude,
+                (6371 * acos(
+                    cos(radians($targetLat)) 
+                    * cos(radians(CAST(Site_Latitude AS DECIMAL(10,6)))) 
+                    * cos(radians(CAST(Site_Longitude AS DECIMAL(10,6))) - radians($targetLng)) 
+                    + sin(radians($targetLat)) 
+                    * sin(radians(CAST(Site_Latitude AS DECIMAL(10,6))))
+                )) AS distance 
+                FROM site_tb 
+                HAVING distance <= $maxDistanceKm 
+                ORDER BY distance ASC 
                 LIMIT 1";
 
         $result = $conn->query($sql);
 
         if ($result && $result->num_rows > 0) {
             $row = $result->fetch_assoc();
+            
             $response['success'] = true;
             $response['name'] = $row['Site_Name'];
             $response['site_id'] = $row['Site_ID'];
+            $response['distance_km'] = round($row['distance'], 2); // ระยะห่างจริงในหน่วย กม.
         } else {
-            // ถ้ายังไม่เจออีก ผมขอ "แงะ" ข้อมูลแถวแรกใน DB ออกมาดูความยาว (Length)
-            $debug = $conn->query("SELECT Site_Latitude, Site_Longitude FROM site_tb LIMIT 1");
-            $d = $debug->fetch_assoc();
-            $lat = $d['Site_Latitude'];
-            $lng = $d['Site_Longitude'];
-            
-            $response['message'] = "หาไม่เจอ! ใน DB ตัวแรกคือ: '$lat' (ยาว ".strlen($lat).") | ค่าที่หา: '$targetLat' (ยาว ".strlen($targetLat).")";
+            $response['message'] = "ไม่พบศูนย์ดิจิทัลชุมชนที่ใกล้เคียงในรัศมี $maxDistanceKm กิโลเมตร";
         }
     }
     $conn->close();

@@ -248,24 +248,6 @@ if(isset($_POST['Modal_Save'])) {
   }
 }
 
-if(isset($_SESSION['Acc_ID'])=="" && $_POST['Survey']=="") {
-    echo "
-    <script src='https://code.jquery.com/jquery-3.6.4.js'></script>
-    <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
-    <script>
-        $(document).ready(function(){
-          Swal.fire({
-            title:'Session มีปัญหาโปรด Login เข้าระบบใหม่อีกครั้ง',
-            icon: 'error',
-            timer: 2000,
-            showConfirmButton: false
-          });
-        });
-        </script>";
-    header("refresh:2; url=index");
-    exit();
-
-}
 
 if(isset($_POST['logout'])) {
      echo "
@@ -288,20 +270,47 @@ if(isset($_POST['logout'])) {
 }
 
 if(isset($_POST['register'])) {
+    $Staff_Type = $_POST['Staff_Type'];
+    if($Staff_Type == 'center') {
+      $Acc_Role = 'User';
+
+    } else {
+      $Acc_Role = 'User-Parttime';
+      $startDate = $_POST['startDate'];
+      $endDate = $_POST['endDate'];
+    }
+    $Province = $_POST['Province'];
+    $Amphure = $_POST['Amphure'];
+    $Tambon = $_POST['Tambon'];
+    $Center_ID = $_POST['Center_ID'];
+    
     $Name = $_POST['Name'];
     $Email = $_POST['Email'];
-    $Phone = $_POST['Phone'];
+    $Line = $_POST['Line'];
     $User = $_POST['User'];
+    $Phone = $_POST['Phone'];
     $Password = $_POST['Password'];
     $ConfirmPassword = $_POST['ConfirmPassword'];
-    $RegisterDate = date('Y-m-d H:i:s');
-    
+    $Profile_Pic = $_FILES['Profile_Pic'];
 
+    $PatchImage = "D:/Upload/Profile_Pic/";
+      // เช็ค extension และสร้างชื่อไฟล์ใหม่
+    if(!empty($Profile_Pic['name'])){
+      $ext = pathinfo($Profile_Pic['name'], PATHINFO_EXTENSION);
+      $newName = $User . '_' . date('Ymd_His') . '.' . $ext;
+      move_uploaded_file($Profile_Pic['tmp_name'], $PatchImage . $newName);
+      $Profile_Pic_Name = $newName;
+    } else {
+      $Profile_Pic_Name = '';
+    }
+      
+    $DateNow = date('Y-m-d H:i');
 
     $salt = "1234a1%2F8{}&*%#@!";
     $Password = hash('sha256', $Password . $salt);
 
-    $sql = "INSERT INTO account_tb (Acc_Fullname, Acc_Email, Acc_Phone, Acc_User, Acc_Password, Acc_Role ,Acc_Active, Acc_RegisterDate) VALUES ('$Name', '$Email', '$Phone', '$User', '$Password', 'User', 'Registered', '$RegisterDate')";
+    $sql = "INSERT INTO account_tb (Acc_Fullname, Acc_User, Acc_Password, Acc_Role, Acc_Active, Acc_Phone, Acc_Email,Acc_DateCreate ,Acc_DateStart, Acc_DateEnd, Acc_Image,Site_ID)
+     VALUES ('$Name', '$User', '$Password', '$Acc_Role', 'Waiting_Active', '$Phone', '$Email', '$DateNow', '$startDate', '$endDate', '$Profile_Pic_Name', '$Center_ID')";
     if ($conn->query($sql) === TRUE) {
         echo "
                     <script src='https://code.jquery.com/jquery-3.6.4.js'></script>
@@ -433,5 +442,25 @@ if(isset($_POST['Save_Activity'])){
 
 
 }
+
+
+// if(isset($_SESSION['Acc_ID'])=="" && $_POST['Survey']=="") {
+//     echo "
+//     <script src='https://code.jquery.com/jquery-3.6.4.js'></script>
+//     <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+//     <script>
+//         $(document).ready(function(){
+//           Swal.fire({
+//             title:'Session มีปัญหาโปรด Login เข้าระบบใหม่อีกครั้ง',
+//             icon: 'error',
+//             timer: 2000,
+//             showConfirmButton: false
+//           });
+//         });
+//         </script>";
+//     header("refresh:2; url=index");
+//     exit();
+
+// }
 
 ?>
